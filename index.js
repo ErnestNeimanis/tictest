@@ -520,7 +520,7 @@ function playTurn_AI(){
   
    if( prioratizedBlocking(pf,
     allCombinations,
-    countToWin,
+    countToWin,              
     humanPlayersTurn,
     threshold,
     processGameStep_AI)){
