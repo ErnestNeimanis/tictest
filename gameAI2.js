@@ -191,6 +191,8 @@ allEmergingCombos = (pfv,allCombos,turnId,threshold) => {
     return allCombos.filter(combo => isEmergingCombo(pfv,combo,turnId,threshold));
 }
 
+
+
 blockingPossibilities(pfv, combo, opponentId){
     if(comboPossible(combo,opponentId)){
       //  console.log(combo)
@@ -221,14 +223,13 @@ randomBlock(pfv,allCombos,opponentId,threshold, callback){
 
 efficientBlock(pfv, allCombos,opponentId,threshold, callback){
     let allEmerging = [...allEmergingCombos(pfv, allCombos,opponentId,threshold)]
-    if(allEmerging.length == 0){
+    if(allEmerging.length === 0){
         return false;
     }
     let allBlocks = [];
  //   console.log(allEmerging.length)
     for(let i = 0; i < allEmerging.length; i++){
         let possibilities = [...blockingPossibilities(pfv,allEmerging[i],opponentId)];
-       // allBlocks = [...allBlocks,...possibilities]
         allBlocks.push(...possibilities)
     }
   //  console.log('allblocks  '  ,allBlocks)

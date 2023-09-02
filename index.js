@@ -21,6 +21,10 @@ import { horizontalCombinations,
      prioratizeNewComboWithRandom
 } from "./gameAI.js";
 
+import {  LessBlue } from "./gameAI3.js"
+
+
+
 
 
 const gameSize = document.querySelector('#gameSize')
@@ -34,6 +38,9 @@ const playerTurnText = document.querySelector("#playerTurnText");
 let size = 15;
 let countToWin = 7;
 //
+
+
+
 
 //two platyers or against computer
 let playingAgainstComputer = true;
@@ -118,9 +125,10 @@ function initGameField() {
             playField[i][j] = squares[(i*size)+j];
             playField[i][j].addEventListener("mousedown" , 
             ()=> processGameStep(playField[i][j]))
-            playFieldValues[i][j] = 0;
+            //playFieldValues[i][j] = 0;
         }
     }
+   // playFieldValues = gameAlg.getPlayField();
 
 
 }
@@ -161,6 +169,7 @@ function resize(){
 }
 
 function processGameStep(element){
+   
     if(gameOver){
         return
     }
@@ -506,9 +515,9 @@ initGame();
 
 
 
-
-
-var allCombinations = [...createAllCombinations(size,countToWin)]
+var gameAlg  = new LessBlue(size,countToWin,humanPlayersTurn,computersTurnId)
+playFieldValues = gameAlg.getPlayField();
+var allCombinations = [...gameAlg.getAllCombinations()]
 var activeCombination = [...prioratizeNewComboWithRandom(playFieldValues,allCombinations, countToWin,computersTurnId)]
 let pf = playFieldValues;
 let combo = activeCombination;
@@ -518,6 +527,7 @@ console.log(threshold)
 function playTurn_AI(){
     
   
+    
    if( prioratizedBlocking(pf,
     allCombinations,
     countToWin,              
@@ -526,7 +536,7 @@ function playTurn_AI(){
     processGameStep_AI)){
     return;
    }
-    
+    //if an the active combination is still possible then enter into it randomly
     if(comboPossible(pf,
         activeCombination,
         computersTurnId)){

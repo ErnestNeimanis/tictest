@@ -120,6 +120,8 @@ export function randArray(min = 0, max = 9, length = 1) {
 }
 
 export function comboPossible(pfv, combo ,turnId){
+    
+
    // console.log('3 len ' , combo.length)
     let combinationLength = combo.length
    
@@ -139,34 +141,27 @@ export function comboPossible(pfv, combo ,turnId){
     return true;
 }
 
+function cellAvailable(pfv,cell){
+    return pfv[cell.row][cell.col] === 0
+}
+
 export function randomEntryInCombo(pfv, comboArray){
-    let combinationLength = comboArray.length
     
-    for(let i = 0; i < combinationLength; i++){
-        let random = rand(0,combinationLength - 1);
-        
-        let row = comboArray[random].row;
-        let col = comboArray[random].col;
-        
-        if(pfv[row][col] == 0){
-            return {row: row, col: col};
-        }else{
-            i--;
-        }
-    }
+    const availableCells = comboArray.filter((cell) => cellAvailable(pfv,cell));
+   return availableCells[rand(0,availableCells.length -1)]
+
 }
 
 const allPossibleEntriesInCombo = (pfv,combo) => {
     return combo.map(element => pfv[element.row][element.col] === 0)
 }
 
-export function choseRandomCombo(pfv,allCombos, turnId = 2){
 
+//what is all combos???
+export function choseRandomCombo(pfv,allCombos, turnId = 2){
     let random = rand(0,allCombos.length-1);
-  
-    for(let i =0; i < allCombos.length &&
-        !comboPossible(pfv,allCombos[random],turnId); i++){
-        random = rand(0,allCombos.length);
+    while( !comboPossible(pfv,allCombos[random],turnId)){
+        random = rand(0,allCombos.length-1);
     }
     return allCombos[random];
 }
@@ -177,10 +172,12 @@ export function isEmergingCombo(pfv, combo,turnId,threshold){
 }
 
 export function comboValuesFromIndexes(pfv,combo){
+  
    return combo.map(element => [pfv[element.row][element.col]]);
 }
 
 export function arrayOccurances (array, element){
+    
     return array.reduce((count, val) => (val == element ? count +1 : count), 0);
 }
 
@@ -240,7 +237,7 @@ export const efficientBlock = (pfv, allCombos,opponentId,threshold, callback) =>
 
 }
 
-export const mostFrequent = (array) => {
+export function mostFrequent(array){
     let newArr = array.map(element => JSON.stringify(element));
     let resultIndex = 0;
     let maxCount = 0;
@@ -287,7 +284,7 @@ export const prioratizedBlocking = (pfv,allCombos,comboLength,opponentId,thresho
 
     for(let i = comboLength; i >= threshold; i--){
        if( efficientBlock(pfv,allCombos,opponentId,i,callback) ){
-        console.log('blocking with threshold: ' , i)
+      //  console.log('blocking with threshold: ' , i)
         return true;
        }
     }
@@ -300,6 +297,7 @@ export const prioratizeNewComboWithRandom = (pfv,allCombos,comboLength,AI_id) =>
     let emCombos = [];
 
     for(let i = comboLength; i >= threshold; i--){
+        
         emCombos = allCombos.filter(combo => isEmergingCombo(pfv,combo,AI_id,i))
         if(emCombos.length > 0){
             console.log('starting prioritized combo with threshold: ' , i)
@@ -308,6 +306,6 @@ export const prioratizeNewComboWithRandom = (pfv,allCombos,comboLength,AI_id) =>
         emCombos =[];
     }
     //throw new Error('didnt find prioritized combos')
-    console.log('chosing new combo at random')
+    //console.log('chosing new combo at random')
     return choseRandomCombo(pfv,allCombos,AI_id)
 }
