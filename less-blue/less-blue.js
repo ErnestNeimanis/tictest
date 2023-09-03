@@ -1,17 +1,19 @@
 
-import { LessBlueGame } from "./lessBlueGame.js";
-import { GameData } from "./lessBlueGameData.js";
+import { Game } from "./game.js";
+import { GameData } from "./game-data.js";
 
 export class LessBlue {
-  constructor(fieldSize, comboLength, playerId, lessBlueId) {
+  constructor(fieldSize, comboLength,start = true, playerId =1, lessBlueId=2) {
     this.initialData = {
       fieldSize: fieldSize,
       comboLength: comboLength,
+      start:start,
       playerId: playerId,
       lessBlueId: lessBlueId,
     };
-    this.gameData = new GameData(this.initialData);
-    this.lessBlueGame = new LessBlueGame(this.gameData);
+    
+    this.game = new Game(this.initialData);
+    this.gameData = this.game.getGameData();
   }
 
   getPlayField(){
@@ -19,13 +21,13 @@ export class LessBlue {
   }
 
   nextMove(row,col) {
-
+    return this.game.response(row,col)
   }
 
   //if win, return the winning combo, winners entry id, and the gamefield
   //else return false 
   checkForWin(){
-
+    
   }
 
 

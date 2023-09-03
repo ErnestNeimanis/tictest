@@ -1,5 +1,5 @@
 
-export class LessBlueUtils {
+export class Utils {
 
     constructor(){
   
@@ -26,6 +26,10 @@ comboPossible(combo ,turnId){
     return true;
 }
 
+cellAvailable(pfv, cell) {
+  return pfv[cell.row][cell.col] === 0;
+}
+
 
     
   rand(min = 0, max = 9) {
@@ -48,3 +52,4 @@ randArray(min = 0, max = 9, length = 1) {
     return uniqueArray;
 }
 }
+
