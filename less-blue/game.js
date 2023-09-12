@@ -1,8 +1,9 @@
-import { ComboinationAnalisizer } from "./combination-analizer.js";
+import { ComboAnalisizer } from "./combo-analizer.js";
+
 import { GameData } from "./game-data.js";
 export class Game {
   constructor(gameData) {
-    this.combinationAnalizer = new ComboinationAnalisizer();
+
     this.gameData = new GameData(gameData);
   }
 

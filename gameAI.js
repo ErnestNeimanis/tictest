@@ -158,13 +158,15 @@ export function isEmergingCombo(pfv, combo, turnId, threshold) {
     arrayOccurances(comboValuesFromIndexes(pfv, combo), turnId) >= threshold
   );
 }
-
+//turns the {row,col} array into array of the values in playfield that are
+//that are entry ids
 export function comboValuesFromIndexes(pfv, combo) {
-  return combo.map((element) => [pfv[element.row][element.col]]);
+  let r = combo.map((element) => pfv[element.row][element.col]);
+  return r
 }
 
-export function arrayOccurances(array, element) {
-  return array.reduce((count, val) => (val == element ? count + 1 : count), 0);
+export function arrayOccurances(array, id) {
+  return array.reduce((count, val) => (val === id ? count + 1 : count), 0);
 }
 
 export const allEmergingCombos = (pfv, allCombos, turnId, threshold) => {
@@ -174,6 +176,7 @@ export const allEmergingCombos = (pfv, allCombos, turnId, threshold) => {
 };
 
 export const blockingPossibilities = (pfv, combo, opponentId) => {
+ 
   if (comboPossible(combo, opponentId)) {
     //  console.log(combo)
     return combo.filter((element) => pfv[element.row][element.col] === 0);
@@ -212,37 +215,39 @@ export const randomBlock = (
   // return possibilities[rand(0,possibilities.length)]
 };
 
-export const efficientBlock = (
+
+//finds the most fequent blocking possibility
+//thus trying to block more then one emerging
+//oponents combo if possible
+export function efficientBlock (
   pfv,
   allCombos,
   opponentId,
   threshold,
-  callback
-) => {
+) {
+
+
   let allEmerging = [
     ...allEmergingCombos(pfv, allCombos, opponentId, threshold),
   ];
   if (allEmerging.length == 0) {
     return false;
   }
+  /**
+   * @type {Array<{row:number,col:number}>}
+   */
   let allBlocks = [];
-  //   console.log(allEmerging.length)
+
   for (let i = 0; i < allEmerging.length; i++) {
     let possibilities = [
       ...blockingPossibilities(pfv, allEmerging[i], opponentId),
     ];
-    // allBlocks = [...allBlocks,...possibilities]
+   
     allBlocks.push(...possibilities);
   }
-  //  console.log('allblocks  '  ,allBlocks)
 
-  let block = mostFrequentMultipleRandom(allBlocks);
-  // console.log(block);
-
-  if (typeof callback == "function") {
-    callback(block);
-  }
-  return true;
+  let block =  mostFrequentMultipleRandom(allBlocks);
+  return block;
 };
 
 export function mostFrequent(array) {
@@ -260,15 +265,28 @@ export function mostFrequent(array) {
   return array[resultIndex];
 }
 
-export const mostFrequentMultiple = (array) => {
-  let newArr = array.map((element) => JSON.stringify(element));
+  function stringifyArrayElements(array){
+    return  array.map((element) => JSON.stringify(element));
+  }
+  /**
+   * @param {Array<{row:number,col:number}>}
+   * 
+   * returns an array containing the most frequent elements
+   * there will be more the one element in the array
+   * only if there are two or more elements that have been the most frequent
+   */
+export function mostFrequentMultiple(array) {
 
+  let newArr = stringifyArrayElements(array)
   let maxCount = 0;
   let indexes = new Set();
-
+  console.log("newarr",newArr)
   for (let i = 0; i < newArr.length; i++) {
+    /**
+     * @type {number}
+     */
     let occurances = arrayOccurances(newArr, newArr[i]);
-
+    
     if (occurances > maxCount) {
       maxCount = occurances;
       indexes = [i];
@@ -281,7 +299,7 @@ export const mostFrequentMultiple = (array) => {
   return Array.from(new Set(indexes.map((i) => array[i])));
 };
 
-export const mostFrequentMultipleRandom = (array) => {
+export function mostFrequentMultipleRandom (array) {
   let values = mostFrequentMultiple(array);
   let result = values[rand(0, values.length - 1)];
   return result;
@@ -292,13 +310,12 @@ export const prioratizedBlocking = (
   allCombos,
   comboLength,
   opponentId,
-  threshold,
-  callback
+  threshold
 ) => {
   for (let i = comboLength; i >= threshold; i--) {
-    if (efficientBlock(pfv, allCombos, opponentId, i, callback)) {
-      //  console.log('blocking with threshold: ' , i)
-      return true;
+    const efficient = efficientBlock(pfv, allCombos, opponentId, i)
+    if (efficient) {
+      return efficient;
     }
   }
   return false;

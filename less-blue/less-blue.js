@@ -32,9 +32,9 @@ export class LessBlue {
 
 
 
-  getAllCombinations() {
-    if (!this.gameData.allCombinations)
+  getAllCombos() {
+    if (!this.gameData.allCombos)
       throw new Error("'all combinations' not set");
-    return this.gameData.allCombinations;
+    return this.gameData.allCombos;
   }
 }

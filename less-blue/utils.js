@@ -6,31 +6,11 @@ export class Utils {
     }
 
 
-comboPossible(combo ,turnId){
-    console.log(combo)
-    playfield = this.playField
-    let combinationLength = combo.length
-   
-    for(let i = 0; i < combinationLength; i++){
-        let row = combo[i].row;
-        let col = combo[i].col;
-        let pfVal = playfield[row][col];
-    
-        if(pfVal != 0 && pfVal != turnId){
-            return false;
-        } 
-        if(i === combinationLength - 1 && pfVal != 0 && pfVal != turnId){
-            return false;
-        }
-    }
-    return true;
+
+
+arrayOccurances(array, id) {
+  return array.reduce((count, val) => (val === id ? count + 1 : count), 0);
 }
-
-cellAvailable(pfv, cell) {
-  return pfv[cell.row][cell.col] === 0;
-}
-
-
     
   rand(min = 0, max = 9) {
     min = Math.ceil(min);
@@ -51,5 +31,59 @@ randArray(min = 0, max = 9, length = 1) {
     }
     return uniqueArray;
 }
+
+stringifyArrayElements(array){
+    return  array.map((element) => JSON.stringify(element));
+  }
+
+//returns most frequent element
+mostFrequent(array) {
+  let newArr = this.stringifyArrayElements(array);
+  let resultIndex = 0;
+  let maxCount = 0;
+
+  for (let i = 0; i < newArr.length; i++) {
+    let occurances = this.arrayOccurances(newArr, newArr[i]);
+    if (occurances > maxCount) {
+      maxCount = occurances;
+      resultIndex = i;
+    }
+  }
+  return array[resultIndex];
+}
+
+//returns an array of all most frequent elements
+mostFrequentElements(array) {
+
+  let newArr = stringifyArrayElements(array)
+  let maxCount = 0;
+  let indexes = new Set();
+
+  for (let i = 0; i < newArr.length; i++) {
+    /**
+     * @type {number}
+     */
+    let occurances = this.arrayOccurances(newArr, newArr[i]);
+    
+    if (occurances > maxCount) {
+      maxCount = occurances;
+      indexes = [i];
+    }
+    if (occurances === maxCount) {
+      indexes.push(i);
+    }
+  }
+  return Array.from(new Set(indexes.map((i) => array[i])));
+}
+
+//returns one of the most requent elements at random
+mostFrequentRandom (array) {
+  let values = this.mostFrequentElements(array);
+  let result = values[rand(0, values.length - 1)];
+  return result;
+}
+
+
+
 }
 

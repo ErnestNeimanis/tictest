@@ -478,7 +478,7 @@ initGame();
 
 var gameAlg = new LessBlue(size, countToWin );
 playFieldValues = gameAlg.getPlayField();
-var allCombinations = [...gameAlg.getAllCombinations()];
+var allCombinations = [...gameAlg.getAllCombos()];
 var activeCombination = [
   ...prioratizeNewComboWithRandom(
     playFieldValues,
@@ -491,18 +491,18 @@ let pf = playFieldValues;
 let combo = activeCombination;
 
 const threshold = Math.floor(countToWin / 2);
-console.log(threshold);
+
 function playTurn_AI() {
-  if (
-    prioratizedBlocking(
+  const prioratizedBlock = prioratizedBlocking(
       pf,
       allCombinations,
       countToWin,
       humanPlayersTurn,
-      threshold,
-      processGameStep_AI
-    )
-  ) {
+      threshold)
+      console.log(prioratizedBlock)
+  if (prioratizedBlock)
+   {
+    processGameStep_AI(prioratizedBlock);
     return;
   }
   //if an the active combination is still possible then enter into it randomly
