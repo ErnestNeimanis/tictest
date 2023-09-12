@@ -1,9 +1,18 @@
-import { ComboAnalisizer } from "./combo-analizer";
-import { Utils } from "./utils";
-class Blocker extends ComboAnalisizer {
+import { ComboUtils } from "./combo-utils.js";
+import { Utils } from "./utils.js";
+export class Blocker extends ComboUtils {
   constructor(gameData) {
     this.gameData = gameData;
     this.utils = new Utils();
+    this.defaultThreshold = Math.floor(this.gameData.getComboLength()/2) ;
+  }
+
+  /**
+   check if blocks needed and return all possible blocks
+   if no blocks needed, return an empty array
+   */
+  blocks() {
+    const { playerId } = this.gameData.get();
   }
 
   blockingPossibilities(combo, id) {
@@ -42,5 +51,4 @@ class Blocker extends ComboAnalisizer {
     let blocks = utils.mostFrequentElements(allBlocks);
     return blocks;
   }
-
 }

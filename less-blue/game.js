@@ -1,6 +1,7 @@
-import { ComboAnalisizer } from "./combo-analizer.js";
 
+import {Blocker} from "./blocker.js"
 import { GameData } from "./game-data.js";
+
 export class Game {
   constructor(gameData) {
 
@@ -14,6 +15,8 @@ export class Game {
   
   */
   response(inputRow, inputCol) {
+    this.gameData.inputCell({inputRow,inputCol});
+    //playerin should be analized with the updated gamefield instead
     let playerWin = this._playerWin(inputRow, inputCol);
     if(playerWin){
         return playerWin;
@@ -23,6 +26,8 @@ export class Game {
     preform analysis of the field and chose a cell
     1.check if opponent has an emerging combo
         if yes, chose an efficient block
+    
+    
     2.check if you have emerging combo/combos
 
     then either chose the best combo or start at random
@@ -163,20 +168,6 @@ export class Game {
     return comboChoice;
   }
 
-  // prioratizeNewComboWithRandom = (pfv,allCombos,comboLength,AI_id) =>{
-  //     let threshold = 1;
-  //     let emCombos = [];
 
-  //     for(let i = comboLength; i >= threshold; i--){
-  //         emCombos = allCombos.filter(combo => isEmergingCombo(pfv,combo,AI_id,i))
-  //         if(emCombos.length > 0){
-  //             console.log('starting prioritized combo with threshold: ' , i)
-  //             return emCombos[rand(0,emCombos.length-1)];
-  //         }
-  //         emCombos =[];
-  //     }
-  //     //throw new Error('didnt find prioritized combos')
-  //     console.log('chosing new combo at random')
-  //     return choseRandomCombo(pfv,allCombos,AI_id)
-  // }
+
 }

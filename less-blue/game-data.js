@@ -78,6 +78,9 @@ export class GameData {
     return this.emptyCellValue;
   }
 
+  getComboLength() {
+    return this.comboLength;
+  }
   inputCell(entry, id) {
     if (!entry.row || !entry.col || !id) {
       throw new Error("missing input");

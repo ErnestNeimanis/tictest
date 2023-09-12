@@ -1,22 +1,22 @@
-export class ComboAnalisizer {
+export class ComboUtils {
   constructor(gameData) {
     this.gameData = gameData;
   }
 
 
   
-cellAvailable(pfv, cell) {
-  return pfv[cell.row][cell.col] === 0;
+cellAvailable(playField, cell) {
+  return playField[cell.row][cell.col] === 0;
 }
 
 comboPossible(combo, turnId) {
   
     let combinationLength = combo.length;
-    const pfv = this.gameData.playField;
+    const playField = this.gameData.playField;
     for (let i = 0; i < combinationLength; i++) {
       let row = combo[i].row;
       let col = combo[i].col;
-      let pfVal = pfv[row][col];
+      let pfVal = playField[row][col];
 
       if (pfVal != 0 && pfVal != turnId) {
         return false;
@@ -25,17 +25,15 @@ comboPossible(combo, turnId) {
     return true;
   }
 
-comboValuesFromIndexes(pfv, combo) {
-  console.log("comboValuesFromIndexes,", combo)
-  let r = combo.map((element) => pfv[element.row][element.col]);
-  console.log("r",r)
-  return r
+comboValuesFromIndexes(playField, combo) {
+  let values = combo.map((element) => playField[element.row][element.col]);
+  return values
 }
 
 
-getAllEmergingCombos = (pfv, allCombos, turnId, threshold) => {
+getAllEmergingCombos = (playField, allCombos, turnId, threshold) => {
   return allCombos.filter((combo) =>
-    isEmergingCombo(pfv, combo, turnId, threshold)
+    isEmergingCombo(playField, combo, turnId, threshold)
   );
 };
 
