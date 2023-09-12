@@ -1,16 +1,14 @@
-export class ComboUtils {
+import { Utils } from "./utils.js";
+export class ComboUtils extends Utils{
   constructor(gameData) {
     this.gameData = gameData;
   }
 
+  cellAvailable(playField, cell) {
+    return playField[cell.row][cell.col] === 0;
+  }
 
-  
-cellAvailable(playField, cell) {
-  return playField[cell.row][cell.col] === 0;
-}
-
-comboPossible(combo, turnId) {
-  
+  comboPossible(combo, turnId) {
     let combinationLength = combo.length;
     const playField = this.gameData.playField;
     for (let i = 0; i < combinationLength; i++) {
@@ -25,28 +23,44 @@ comboPossible(combo, turnId) {
     return true;
   }
 
-comboValuesFromIndexes(playField, combo) {
-  let values = combo.map((element) => playField[element.row][element.col]);
-  return values
-}
+  comboValuesFromIndexes(combo, playField = this.playField) {
+    let values = combo.map((element) => playField[element.row][element.col]);
+    return values;
+  }
 
+  getAllEmergingCombos = (playField, allCombos, turnId, threshold) => {
+    return allCombos.filter((combo) =>
+      isEmergingCombo(playField, combo, turnId, threshold)
+    );
+  };
 
-getAllEmergingCombos = (playField, allCombos, turnId, threshold) => {
-  return allCombos.filter((combo) =>
-    isEmergingCombo(playField, combo, turnId, threshold)
-  );
-};
+  getAllCombos() {
+    return this.gameData.allCombinations;
+  }
 
-getAllCombos(){
-  return this.gameData.allCombinations;
-}
+  checkForWinDumb() {
+    const { allCombos, playField, emptyCellValue } = this.gameData.get();
 
-  checkForWin(cell, playField = this.playField) {
+    let result = {};
+    for (let i = 0; i < allCombos.length; i++) {
+      const comboValues = this.comboValuesFromIndexes(allCombos[i]);
+      const allEqual = comboValues.every(
+        (val) => val != emptyCellValue && val === comboValues[0]
+      );
+      if (allEqual) {
+        result = {
+          combo: allCombos[i],
+          id:comboValues[0]
+        };
+        return;
+      }
+    }
+    return result;
+  }
+
+  checkForWinSmart(cell, playField) {
     let inRowEntryCount = 1;
-
-    let row = cell.row;
-    let col = cell.col;
-
+    const { row, col } = cell;
     let entry = playField[row][col];
     let winningIndecies = [[row, col]];
 
@@ -205,6 +219,6 @@ getAllCombos(){
       }
     }
 
-    return false;
+    return {};
   }
 }

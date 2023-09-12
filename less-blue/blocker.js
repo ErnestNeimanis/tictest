@@ -11,7 +11,7 @@ export class Blocker extends ComboUtils {
    check if blocks needed and return all possible blocks
    if no blocks needed, return an empty array
    */
-  blocks() {
+  blocks(threshold = this.defaultThreshold) {
     const { playerId } = this.gameData.get();
   }
 

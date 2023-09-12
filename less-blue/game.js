@@ -6,6 +6,7 @@ export class Game {
   constructor(gameData) {
 
     this.gameData = new GameData(gameData);
+
   }
 
   /*
@@ -15,6 +16,12 @@ export class Game {
   
   */
   response(inputRow, inputCol) {
+
+    if(this.gameData.getPlayField()[inputRow][inputRow] 
+    != this.gameData.getEmptyCellValue()){
+      throw new Error("attepting to input into an occupied cell")
+    }
+
     this.gameData.inputCell({inputRow,inputCol});
     //playerin should be analized with the updated gamefield instead
     let playerWin = this._playerWin(inputRow, inputCol);
