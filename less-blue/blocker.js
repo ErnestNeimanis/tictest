@@ -2,6 +2,7 @@ import { ComboUtils } from "./combo-utils.js";
 import { Utils } from "./utils.js";
 export class Blocker extends ComboUtils {
   constructor(gameData) {
+    super(gameData);
     this.gameData = gameData;
     this.utils = new Utils();
     this.defaultThreshold = Math.floor(this.gameData.getComboLength()/2) ;

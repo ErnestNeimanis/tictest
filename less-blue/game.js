@@ -1,13 +1,14 @@
 
-import {Blocker} from "./blocker.js"
+import { Process } from "./process.js";
 import { GameData } from "./game-data.js";
+
 
 export class Game {
   constructor(gameData) {
-
     this.gameData = new GameData(gameData);
-
+    this.process = new Process(this.gameData);
   }
+  
 
   /*
   check if blocking is necessary and respond if true
@@ -21,6 +22,8 @@ export class Game {
     != this.gameData.getEmptyCellValue()){
       throw new Error("attepting to input into an occupied cell")
     }
+
+    const algorithm = this.algorithm;
 
     this.gameData.inputCell({inputRow,inputCol});
     //playerin should be analized with the updated gamefield instead
@@ -110,7 +113,7 @@ export class Game {
   }
 
   _lessBlueWin(row,col) {
-    this.checkForWin(inputRow, inputCol);
+    const lessBlueWin = this.checkForWin(inputRow, inputCol);
     if (lessBlueWin) {
       return {
         playField: this.gameData.getPlayField(),
@@ -118,7 +121,7 @@ export class Game {
         row,
         col,
         gameOver: true,
-        winnerId: lessBlueWin.winnerId,
+        winnerId: lessBlueWin.id,
       };
     }
     return false;

@@ -1,6 +1,7 @@
 import { Utils } from "./utils.js";
 export class ComboUtils extends Utils{
   constructor(gameData) {
+    super();
     this.gameData = gameData;
   }
 
@@ -65,8 +66,8 @@ export class ComboUtils extends Utils{
     let winningIndecies = [[row, col]];
 
     let result = {
-      winningIndecies: winningIndecies,
-      winnerId: entry,
+      combo: winningIndecies,
+      id: entry,
     };
 
     let j = col + 1;

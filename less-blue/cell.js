@@ -9,9 +9,5 @@ export class Cell{
         this.col = col;
     }
 
-    /**
-     * @param {Entry}
-     * 
-     */
-   
+
 }

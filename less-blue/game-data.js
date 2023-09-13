@@ -81,10 +81,10 @@ export class GameData {
   getComboLength() {
     return this.comboLength;
   }
-  inputCell(entry, id) {
-    if (!entry.row || !entry.col || !id) {
+  inputCell(cell, id) {
+    if (!cell.row || !cell.col || !id) {
       throw new Error("missing input");
     }
-    this.playField[(entry.row, entry.col)] = id;
+    this.playField[(cell.row, cell.col)] = id;
   }
 }
