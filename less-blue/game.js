@@ -72,7 +72,7 @@ export class Game {
 
   checkForWinTest(cell,playField){
     
-    this.process.checkForWin(cell,playField);
+    return this.process.checkForWin(cell,playField);
   }
 
   swapPlayerTurn(turnId){

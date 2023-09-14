@@ -71,14 +71,16 @@ export class ComboUtils extends Utils {
     const { row, col } = cell;
     let winnderId = playField[row][col];
     let winningCells = [];
-
-    const { emptyCellValue, countToWin } = this.gameData.get();
+    const countToWin = this.gameData.getComboLength();
+    const { emptyCellValue } = this.gameData.get();
     // console.log("countToWin",countToWin)
 
     let result = {
       combo: winningCells,
       id: winnderId,
     };
+
+    winningCells.push(cell)
 
     //to right
     let j = col + 1;
@@ -124,7 +126,7 @@ export class ComboUtils extends Utils {
 
     inRowEntryCount = 1;
     winningCells = [];
-
+    winningCells.push(cell)
     //upward search
     j = col;
     let i = row - 1;
@@ -167,7 +169,7 @@ export class ComboUtils extends Utils {
 
     inRowEntryCount = 1;
     winningCells = [];
-
+    winningCells.push(cell)
     //if the correct amount of matching entries not found vertically
     //starts searching diagonally
 
@@ -219,7 +221,7 @@ export class ComboUtils extends Utils {
 
     inRowEntryCount = 1;
     winningCells = [];
-
+    winningCells.push(cell)
     i = row - 1;
     j = col - 1;
     while (i >= 0 && j >= 0) {

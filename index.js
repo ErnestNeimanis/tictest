@@ -161,11 +161,11 @@ function processGameStep(element) {
   addSymbolToParent(element);
 
   const win = gameAlg.checkForWin(getEntry(element),playFieldValues);
-  //console.log( "win by less blue",win)
+  console.log( "win by less blue",win)
   //console.log("win by index.js",checkForWin(getEntry(element)))
-  if (checkForWin(getEntry(element))) {
+  if (win.combo) {
   
-    insertWinningColors();
+    insertWinningColors2(win.combo);
     gameOver = true;
   }
 
