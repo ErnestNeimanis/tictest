@@ -14,8 +14,8 @@ export class GameData {
     this.comboLength = initialData.comboLength;
     this.playerId = initialData.playerId;
     this.lessBlueId = initialData.lessBlueId;
-    this.allCombos = new CombinationGenerator(initialData);
-    this.playField = this._createPlayField(0);
+    this.allCombos = new CombinationGenerator(initialData); //Cell[]
+    this.playField = this._createPlayField(0); //any[][]
     this.emptyCellValue = 0;
     this.activeCombos = [];
     this.turnId = this._initialTurn(initialData.start);

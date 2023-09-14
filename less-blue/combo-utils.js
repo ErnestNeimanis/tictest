@@ -1,5 +1,6 @@
 import { Utils } from "./utils.js";
-export class ComboUtils extends Utils{
+import { Cell } from "./cell.js";
+export class ComboUtils extends Utils {
   constructor(gameData) {
     super();
     this.gameData = gameData;
@@ -24,7 +25,7 @@ export class ComboUtils extends Utils{
     return true;
   }
 
-  comboValuesFromIndexes(combo, playField = this.playField) {
+  comboValuesFromIndexes(combo, playField = this.gameData.getPlayField()) {
     let values = combo.map((element) => playField[element.row][element.col]);
     return values;
   }
@@ -51,7 +52,7 @@ export class ComboUtils extends Utils{
       if (allEqual) {
         result = {
           combo: allCombos[i],
-          id:comboValues[0]
+          id: comboValues[0],
         };
         return;
       }
@@ -59,26 +60,41 @@ export class ComboUtils extends Utils{
     return result;
   }
 
+  
+
+
   checkForWinSmart(cell, playField) {
+    if (!playField) throw new Error("no playfield");
+    //console.log("playfield in checkforwin lesslblue",playField)
+
     let inRowEntryCount = 1;
     const { row, col } = cell;
-    let entry = playField[row][col];
-    let winningIndecies = [[row, col]];
+    let winnderId = playField[row][col];
+    let winningCells = [];
+
+    const { emptyCellValue, countToWin } = this.gameData.get();
+    // console.log("countToWin",countToWin)
 
     let result = {
-      combo: winningIndecies,
-      id: entry,
+      combo: winningCells,
+      id: winnderId,
     };
 
+    //to right
     let j = col + 1;
     while (j < playField[row].length) {
-      if (playField[row][j] != 0 && playField[row][j] == entry) {
-        winningIndecies.push([row, j]);
+      if (
+        playField[row][j] != emptyCellValue &&
+        playField[row][j] == winnderId
+      ) {
+        winningCells.push(new Cell(row, j));
+
         inRowEntryCount++;
         j++;
         if (inRowEntryCount == countToWin) {
+           //console.log("result",result)
           return result;
-        }
+        } 
       } else {
         break;
       }
@@ -87,33 +103,41 @@ export class ComboUtils extends Utils{
     //searches for matching to the left
     j = col - 1;
     while (j >= 0) {
-      if (playField[row][j] != 0 && playField[row][j] == entry) {
-        winningIndecies.push([row, j]);
+      if (playField[row][j] != 0 && playField[row][j] == winnderId) {
+        winningCells.push(new Cell(row, j));
         inRowEntryCount++;
         j--;
         if (inRowEntryCount == countToWin) {
+           console.log("result",result)
           return result;
         }
       } else {
         break;
       }
     }
+    if (winnderId === 2) {
+      console.log("horizontal",  inRowEntryCount);
+    }
 
     //if the correct amount of matching entries not horizontally,
     // starts over from the clicked field and searches vertically
 
     inRowEntryCount = 1;
-    winningIndecies = [[row, col]];
+    winningCells = [];
 
     //upward search
     j = col;
     let i = row - 1;
     while (i >= 0) {
-      if (playField[i][col] != 0 && playField[i][col] == entry) {
-        winningIndecies.push([i, col]);
+      if (playField[i][col] != 0 && playField[i][col] == winnderId) {
+     
+        winningCells.push(new Cell(i, col));
+
         inRowEntryCount++;
         i--;
+      
         if (inRowEntryCount == countToWin) {
+          console.log("result",result)
           return result;
         }
       } else {
@@ -124,11 +148,12 @@ export class ComboUtils extends Utils{
     //downward search
     i = row + 1;
     while (i < playField.length) {
-      if (playField[i][col] != 0 && playField[i][col] == entry) {
-        winningIndecies.push([i, col]);
+      if (playField[i][col] != 0 && playField[i][col] == winnderId) {
+        winningCells.push(new Cell(i, col));
         inRowEntryCount++;
         i++;
         if (inRowEntryCount == countToWin) {
+           console.log("result",result)
           return result;
         }
       } else {
@@ -136,8 +161,12 @@ export class ComboUtils extends Utils{
       }
     }
 
+    if (winnderId === 2) {
+      console.log("vertical",  inRowEntryCount);
+    }
+
     inRowEntryCount = 1;
-    winningIndecies = [[row, col]];
+    winningCells = [];
 
     //if the correct amount of matching entries not found vertically
     //starts searching diagonally
@@ -147,13 +176,14 @@ export class ComboUtils extends Utils{
     i = row - 1;
     j = col + 1;
     while (i >= 0 && j < playField[row].length) {
-      if (playField[i][j] != 0 && playField[i][j] == entry) {
-        winningIndecies.push([i, j]);
+      if (playField[i][j] != 0 && playField[i][j] == winnderId) {
+        winningCells.push(new Cell(i, j));
         inRowEntryCount++;
         i--;
         j++;
 
         if (inRowEntryCount == countToWin) {
+           console.log("result",result)
           return result;
         }
       } else {
@@ -166,12 +196,13 @@ export class ComboUtils extends Utils{
     i = row + 1;
     j = col - 1;
     while (i < playField.length && j >= 0) {
-      if (playField[i][j] != 0 && playField[i][j] == entry) {
-        winningIndecies.push([i, j]);
+      if (playField[i][j] != 0 && playField[i][j] == winnderId) {
+        winningCells.push(new Cell(i, j));
         inRowEntryCount++;
         i++;
         j--;
         if (inRowEntryCount == countToWin) {
+           console.log("result",result)
           return result;
         }
       } else {
@@ -179,22 +210,27 @@ export class ComboUtils extends Utils{
       }
     }
 
+    if (winnderId === 2) {
+      console.log("diag right",  inRowEntryCount);
+    }
+
     //diagonally other direction
     //up left
 
     inRowEntryCount = 1;
-    winningIndecies = [[row, col]];
+    winningCells = [];
 
     i = row - 1;
     j = col - 1;
     while (i >= 0 && j >= 0) {
-      if (playField[i][j] != 0 && playField[i][j] == entry) {
-        winningIndecies.push([i, j]);
+      if (playField[i][j] != 0 && playField[i][j] == winnderId) {
+        winningCells.push(new Cell(i, j));
         inRowEntryCount++;
         i--;
         j--;
 
         if (inRowEntryCount == countToWin) {
+           console.log("result",result)
           return result;
         }
       } else {
@@ -207,12 +243,13 @@ export class ComboUtils extends Utils{
     i = row + 1;
     j = col + 1;
     while (i < playField.length && j < playField[row].length) {
-      if (playField[i][j] != 0 && playField[i][j] == entry) {
-        winningIndecies.push([i, j]);
+      if (playField[i][j] != 0 && playField[i][j] == winnderId) {
+        winningCells.push(new Cell(i, j));
         inRowEntryCount++;
         i++;
         j++;
         if (inRowEntryCount == countToWin) {
+           console.log("result",result)
           return result;
         }
       } else {
@@ -220,6 +257,10 @@ export class ComboUtils extends Utils{
       }
     }
 
+    if (winnderId === 2) {
+      console.log("diag left", inRowEntryCount);
+    }
+    console.log("-----------");
     return {};
   }
 }

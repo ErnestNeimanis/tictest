@@ -280,7 +280,7 @@ export function mostFrequentMultiple(array) {
   let newArr = stringifyArrayElements(array)
   let maxCount = 0;
   let indexes = new Set();
-  console.log("newarr",newArr)
+
   for (let i = 0; i < newArr.length; i++) {
     /**
      * @type {number}

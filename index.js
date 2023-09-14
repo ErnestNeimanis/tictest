@@ -160,7 +160,11 @@ function processGameStep(element) {
   inputPlayfieldValue(element);
   addSymbolToParent(element);
 
+  const win = gameAlg.checkForWin(getEntry(element),playFieldValues);
+  //console.log( "win by less blue",win)
+  //console.log("win by index.js",checkForWin(getEntry(element)))
   if (checkForWin(getEntry(element))) {
+  
     insertWinningColors();
     gameOver = true;
   }
@@ -265,7 +269,7 @@ function checkForWin(cell) {
   let row = cell.row;
   let col = cell.col;
 
-  console.log(row, col);
+
 
   let entry = playFieldValues[row][col];
   let winningIndecies = [[row, col]];
@@ -434,12 +438,18 @@ function checkForWin(cell) {
 }
 
 function insertWinningColors() {
-  console.log(winningColorIndecies.length);
+
   for (let i = 0; i < winningColorIndecies.length; i++) {
     playField[winningColorIndecies[i][0]][
       winningColorIndecies[i][1]
     ].firstChild.style.color = "green";
   }
+}
+
+function insertWinningColors2(winningCombo) {
+  winningCombo.forEach((cell) => {
+    playField[cell.row][cell.col].firstChild.style.color = "green";
+  })
 }
 
 //
@@ -499,7 +509,7 @@ function playTurn_AI() {
       countToWin,
       humanPlayersTurn,
       threshold)
-      console.log(prioratizedBlock)
+   
   if (prioratizedBlock)
    {
     processGameStep_AI(prioratizedBlock);
@@ -508,7 +518,7 @@ function playTurn_AI() {
   //if an the active combination is still possible then enter into it randomly
   if (comboPossible(pf, activeCombination, computersTurnId)) {
     processGameStep_AI(randomEntryInCombo(playFieldValues, activeCombination));
-    console.log("bulding combo");
+   // console.log("bulding combo");
   } else {
     activeCombination = [
       ...prioratizeNewComboWithRandom(

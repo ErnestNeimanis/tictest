@@ -26,8 +26,9 @@ export class LessBlue {
 
   //if win, return the winning combo, winners entry id, and the gamefield
   //else return false 
-  checkForWin(){
-    
+  checkForWin(cell,playField){
+   
+   return this.game.checkForWinTest(cell,playField)
   }
 
 
