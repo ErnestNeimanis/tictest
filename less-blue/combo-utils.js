@@ -42,7 +42,7 @@ export class ComboUtils extends Utils {
     return this.gameData.allCombinations;
   }
 
-  checkForWinDumb(playField) {
+  checkForWinDumb(playField = this.gameData.getPlayField()) {
    // const { allCombos, playField, emptyCellValue } = this.gameData.get();
     const {allCombos,emptyCellValue} = this.gameData.get();
   
@@ -66,7 +66,7 @@ export class ComboUtils extends Utils {
   
 
 
-  checkForWinSmart(cell, playField) {
+  checkForWinSmart(cell, playField = this.gameData.getPlayField()) {
     if (!playField) throw new Error("no playfield");
     //console.log("playfield in checkforwin lesslblue",playField)
 

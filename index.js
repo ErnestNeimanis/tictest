@@ -165,7 +165,7 @@ function processGameStep(element) {
   //console.log("win by index.js",checkForWin(getEntry(element)))
   if (win.combo) {
   
-    insertWinningColors2(win.combo);
+    insertWinningColors(win.combo);
     gameOver = true;
   }
 
@@ -437,16 +437,16 @@ function checkForWin(cell) {
   return false;
 }
 
-function insertWinningColors() {
+// function insertWinningColors() {
 
-  for (let i = 0; i < winningColorIndecies.length; i++) {
-    playField[winningColorIndecies[i][0]][
-      winningColorIndecies[i][1]
-    ].firstChild.style.color = "green";
-  }
-}
+//   for (let i = 0; i < winningColorIndecies.length; i++) {
+//     playField[winningColorIndecies[i][0]][
+//       winningColorIndecies[i][1]
+//     ].firstChild.style.color = "green";
+//   }
+// }
 
-function insertWinningColors2(winningCombo) {
+function insertWinningColors(winningCombo) {
   winningCombo.forEach((cell) => {
     playField[cell.row][cell.col].firstChild.style.color = "green";
   })
