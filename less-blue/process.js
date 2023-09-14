@@ -12,10 +12,10 @@ export class Process extends ComboUtils {
     this.gameData.insert(entry)
   }
 
-  checkForWin(cell,playfield) {
-    if (cell) {
-      const win = this.checkForWinSmart(cell,playfield);
-   
+  checkForWin(playField) {
+
+    if (true) {
+      const win = this.checkForWinDumb(playField);
       return win;
     }
 

@@ -26,6 +26,8 @@ export class ComboUtils extends Utils {
   }
 
   comboValuesFromIndexes(combo, playField = this.gameData.getPlayField()) {
+    // console.log("combofromin combo",combo)
+    // console.log("playfield in cvfi",playField)
     let values = combo.map((element) => playField[element.row][element.col]);
     return values;
   }
@@ -40,12 +42,13 @@ export class ComboUtils extends Utils {
     return this.gameData.allCombinations;
   }
 
-  checkForWinDumb() {
-    const { allCombos, playField, emptyCellValue } = this.gameData.get();
-
+  checkForWinDumb(playField) {
+   // const { allCombos, playField, emptyCellValue } = this.gameData.get();
+    const {allCombos,emptyCellValue} = this.gameData.get();
+  
     let result = {};
     for (let i = 0; i < allCombos.length; i++) {
-      const comboValues = this.comboValuesFromIndexes(allCombos[i]);
+      const comboValues = this.comboValuesFromIndexes(allCombos[i],playField);
       const allEqual = comboValues.every(
         (val) => val != emptyCellValue && val === comboValues[0]
       );
@@ -54,7 +57,7 @@ export class ComboUtils extends Utils {
           combo: allCombos[i],
           id: comboValues[0],
         };
-        return;
+        return result;
       }
     }
     return result;
