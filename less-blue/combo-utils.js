@@ -76,12 +76,11 @@ export class ComboUtils extends Utils {
     // console.log("countToWin",countToWin)
 
     let result = {
-      combo: winningCells,
-      id: winnderId,
-    };
-
+      combo:winningCells,
+      id:winnderId
+    }
+    
     winningCells.push(cell)
-
     //to right
     let j = col + 1;
     while (j < playField[row].length) {
@@ -95,7 +94,10 @@ export class ComboUtils extends Utils {
         j++;
         if (inRowEntryCount == countToWin) {
            //console.log("result",result)
-          return result;
+          return {
+            combo:winningCells,
+            id:winnderId
+          };
         } 
       } else {
         break;
@@ -111,7 +113,10 @@ export class ComboUtils extends Utils {
         j--;
         if (inRowEntryCount == countToWin) {
            console.log("result",result)
-          return result;
+          return {
+            combo:winningCells,
+            id:winnderId
+          };
         }
       } else {
         break;
@@ -126,7 +131,7 @@ export class ComboUtils extends Utils {
 
     inRowEntryCount = 1;
     winningCells = [];
-    winningCells.push(cell)
+  winningCells.push(cell)
     //upward search
     j = col;
     let i = row - 1;
@@ -140,7 +145,10 @@ export class ComboUtils extends Utils {
       
         if (inRowEntryCount == countToWin) {
           console.log("result",result)
-          return result;
+          return {
+            combo:winningCells,
+            id:winnderId
+          };
         }
       } else {
         break;
@@ -156,7 +164,10 @@ export class ComboUtils extends Utils {
         i++;
         if (inRowEntryCount == countToWin) {
            console.log("result",result)
-          return result;
+          return {
+            combo:winningCells,
+            id:winnderId
+          };
         }
       } else {
         break;
@@ -169,7 +180,7 @@ export class ComboUtils extends Utils {
 
     inRowEntryCount = 1;
     winningCells = [];
-    winningCells.push(cell)
+winningCells.push(cell)
     //if the correct amount of matching entries not found vertically
     //starts searching diagonally
 
@@ -186,7 +197,10 @@ export class ComboUtils extends Utils {
 
         if (inRowEntryCount == countToWin) {
            console.log("result",result)
-          return result;
+          return {
+            combo:winningCells,
+            id:winnderId
+          };
         }
       } else {
         break;
@@ -205,7 +219,10 @@ export class ComboUtils extends Utils {
         j--;
         if (inRowEntryCount == countToWin) {
            console.log("result",result)
-          return result;
+          return {
+            combo:winningCells,
+            id:winnderId
+          };
         }
       } else {
         break;
@@ -221,7 +238,7 @@ export class ComboUtils extends Utils {
 
     inRowEntryCount = 1;
     winningCells = [];
-    winningCells.push(cell)
+   winningCells.push(cell);
     i = row - 1;
     j = col - 1;
     while (i >= 0 && j >= 0) {
@@ -233,7 +250,10 @@ export class ComboUtils extends Utils {
 
         if (inRowEntryCount == countToWin) {
            console.log("result",result)
-          return result;
+          return {
+            combo:winningCells,
+            id:winnderId
+          };
         }
       } else {
         break;
@@ -251,8 +271,11 @@ export class ComboUtils extends Utils {
         i++;
         j++;
         if (inRowEntryCount == countToWin) {
-           console.log("result",result)
-          return result;
+           console.log("result",result,"winningCells",winningCells)
+          return {
+            combo:winningCells,
+            id:winnderId
+          };
         }
       } else {
         break;
