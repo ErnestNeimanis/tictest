@@ -13,23 +13,21 @@ export class Process extends ComboUtils {
   }
 
   checkForWin(playField,cell) {
-
     
     if(cell){
        return this.checkForWinSmart(cell,playField);
     } else {
       return this.checkForWinDumb(playField)
     }
-   
-     
-      return win;
-  
-
-
-
-   
-
-    return;
+ 
   }
+
+  getInputFromAlgorithm(gameData = this.gameData){
+    const algorithm = this.algorithm;
+    const block = algorithm.block();
+  }
+
+
+
 
 }
