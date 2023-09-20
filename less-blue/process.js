@@ -11,7 +11,8 @@ export class Process extends ComboUtils {
     this.gameData.insert(entry);
   }
 
-  checkForWin(playField = this.gameData.getPlayField(), cell) {
+  checkForWin(cell,playField = this.gameData.getPlayField()) {
+    return this.checkForWinDumb( playField);
     if (cell) {
       return this.checkForWinSmart(cell, playField);
     } else {
@@ -23,17 +24,6 @@ export class Process extends ComboUtils {
     const algorithm = this.algorithm;
     return algorithm.choseCell();
   }
-  winnerData() {
-    const winner = {
-      winnerId:"",
-      loserId:"",
-      combo:""
-    }
-  }
 
-  getInputFromAlgorithm(gameData = this.gameData) {
-    const algorithm = this.algorithm;
-    const block = algorithm.block();
 
-  }
 }

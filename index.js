@@ -160,9 +160,9 @@ function processGameStep(element) {
   inputPlayfieldValue(element);
   addSymbolToParent(element);
 
-  const win = gameAlg.checkForWin(getEntry(element),playFieldValues);
+  const win = gameAlg.checkForWin(getCell(element),playFieldValues);
   console.log( "win by less blue",win)
-  //console.log("win by index.js",checkForWin(getEntry(element)))
+  //console.log("win by index.js",checkForWin(getCell(element)))
   if (win.combo) {
   
     insertWinningColors(win.combo);
@@ -253,7 +253,7 @@ function swapToPlayerOne() {
   }
 }
 
-function getEntry(element) {
+function getCell(element) {
   let row = parseInt(element.id / size);
   let col = parseInt(element.id % size);
   const entry = {

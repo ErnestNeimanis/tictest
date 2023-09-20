@@ -15,21 +15,21 @@ export class Response {
  
    
     this.response = {
+
+      playField: this.playField,
+      turnId: this.turnId,
+      
       row: undefined,
       col: undefined,
       id: undefined,
       cell: undefined,
       entry: {},
 
-      playField: this.playField,
-      turnId: this.turnId,
-
       winner: {},
       winnerId: undefined,
       winningCombo: [],
       playerWin: false,
       lessBlueWin: false,
-     
       loserId: undefined,
     
     };

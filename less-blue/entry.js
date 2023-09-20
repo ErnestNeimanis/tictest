@@ -1,4 +1,4 @@
-import Cell from './cell.js';
+
 export class Entry {
   constructor(row, col,id) {
 

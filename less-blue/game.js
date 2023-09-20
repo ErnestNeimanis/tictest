@@ -80,7 +80,7 @@ export class Game {
 
   checkForWinTest(cell,playField){
     //console.log("playfield in game",playField)
-    return this.process.checkForWin(playField);
+    return this.process.checkForWin(cell,playField);
   }
 
   swapPlayerTurn(turnId){
