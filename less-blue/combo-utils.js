@@ -1,40 +1,67 @@
 import { Utils } from "./utils.js";
 import { Cell } from "./cell.js";
+import { Winner } from "./winner.js";
 export class ComboUtils extends Utils {
   constructor(gameData) {
     super();
     this.gameData = gameData;
   }
 
-  cellAvailable(playField, cell) {
-    return playField[cell.row][cell.col] === 0;
+  cellAvailable(cell) {
+    const { playField, emptyCellValue } = this.gameData.get();
+    return playField[cell.row][cell.col] === emptyCellValue;
   }
 
-  comboPossible(combo, turnId) {
+  //{row,coll}[][]
+  getAllEmergingCombos = (entryId, threshold) => {
+    const { allCombos } = this.gameData.get();
+    return allCombos.filter((combo) =>
+      isEmergingCombo(combo, entryId, threshold)
+    );
+  };
+
+  //bool
+  isEmergingCombo(combo, entryId, threshold) {
+    const { playField } = this.gameData.get();
+    return (
+      comboPossible(combo, entryId) &&
+      arrayOccurances(comboEntryIds(playField, combo), entryId) >= threshold
+    );
+  }
+
+  //bool
+  comboPossible(combo, entryId) {
     let combinationLength = combo.length;
-    const playField = this.gameData.playField;
+    const { playField, emptyCellValue } = this.gameData.playField;
     for (let i = 0; i < combinationLength; i++) {
       let row = combo[i].row;
       let col = combo[i].col;
-      let pfVal = playField[row][col];
+      let cellValue = playField[row][col];
 
-      if (pfVal != 0 && pfVal != turnId) {
+      if (cellValue != emptyCellValue && cellValue != entryId) {
         return false;
       }
     }
     return true;
   }
+  emptyCellsInCombo(combo) {
+    const { playField } = this.gameData.get();
+    return combo.filter(
+      (cell) => playField[cell.row][cell.col] === emptyCellValue
+    );
+  }
 
-  comboValuesFromIndexes(combo, playField = this.gameData.getPlayField()) {
+  comboEntryIds(combo, playField = this.gameData.getPlayField()) {
     // console.log("combofromin combo",combo)
     // console.log("playfield in cvfi",playField)
     let values = combo.map((element) => playField[element.row][element.col]);
     return values;
   }
 
-  getAllEmergingCombos = (playField, allCombos, turnId, threshold) => {
+  getAllEmergingCombos(entryId, threshold){
+    const { playField, allCombos } = this.gameData.get();
     return allCombos.filter((combo) =>
-      isEmergingCombo(playField, combo, turnId, threshold)
+      isEmergingCombo(playField, combo, entryId, threshold)
     );
   };
 
@@ -43,28 +70,25 @@ export class ComboUtils extends Utils {
   }
 
   checkForWinDumb(playField = this.gameData.getPlayField()) {
-   // const { allCombos, playField, emptyCellValue } = this.gameData.get();
-    const {allCombos,emptyCellValue} = this.gameData.get();
-  
+    // const { allCombos, playField, emptyCellValue } = this.gameData.get();
+    const { allCombos, emptyCellValue } = this.gameData.get();
+
     let result = {};
     for (let i = 0; i < allCombos.length; i++) {
-      const comboValues = this.comboValuesFromIndexes(allCombos[i],playField);
+      const comboValues = this.comboEntryIds(allCombos[i], playField);
       const allEqual = comboValues.every(
         (val) => val != emptyCellValue && val === comboValues[0]
       );
       if (allEqual) {
         result = {
           combo: allCombos[i],
-          id: comboValues[0],
+          entryId: comboValues[0],
         };
         return result;
       }
     }
     return result;
   }
-
-  
-
 
   checkForWinSmart(cell, playField = this.gameData.getPlayField()) {
     if (!playField) throw new Error("no playfield");
@@ -79,11 +103,11 @@ export class ComboUtils extends Utils {
     // console.log("countToWin",countToWin)
 
     let result = {
-      combo:winningCells,
-      id:winnderId
-    }
-    
-    winningCells.push(cell)
+      combo: winningCells,
+      entryId: winnderId,
+    };
+
+    winningCells.push(cell);
     //to right
     let j = col + 1;
     while (j < playField[row].length) {
@@ -96,12 +120,12 @@ export class ComboUtils extends Utils {
         inRowEntryCount++;
         j++;
         if (inRowEntryCount == countToWin) {
-           //console.log("result",result)
+          //console.log("result",result)
           return {
-            combo:winningCells,
-            id:winnderId
+            combo: winningCells,
+            entryId: winnderId,
           };
-        } 
+        }
       } else {
         break;
       }
@@ -115,10 +139,10 @@ export class ComboUtils extends Utils {
         inRowEntryCount++;
         j--;
         if (inRowEntryCount == countToWin) {
-           console.log("result",result)
+          console.log("result", result);
           return {
-            combo:winningCells,
-            id:winnderId
+            combo: winningCells,
+            entryId: winnderId,
           };
         }
       } else {
@@ -126,7 +150,7 @@ export class ComboUtils extends Utils {
       }
     }
     if (winnderId === 2) {
-      console.log("horizontal",  inRowEntryCount);
+      console.log("horizontal", inRowEntryCount);
     }
 
     //if the correct amount of matching entries not horizontally,
@@ -134,23 +158,22 @@ export class ComboUtils extends Utils {
 
     inRowEntryCount = 1;
     winningCells = [];
-  winningCells.push(cell)
+    winningCells.push(cell);
     //upward search
     j = col;
     let i = row - 1;
     while (i >= 0) {
       if (playField[i][col] != 0 && playField[i][col] == winnderId) {
-     
         winningCells.push(new Cell(i, col));
 
         inRowEntryCount++;
         i--;
-      
+
         if (inRowEntryCount == countToWin) {
-          console.log("result",result)
+          console.log("result", result);
           return {
-            combo:winningCells,
-            id:winnderId
+            combo: winningCells,
+            entryId: winnderId,
           };
         }
       } else {
@@ -166,10 +189,10 @@ export class ComboUtils extends Utils {
         inRowEntryCount++;
         i++;
         if (inRowEntryCount == countToWin) {
-           console.log("result",result)
+          console.log("result", result);
           return {
-            combo:winningCells,
-            id:winnderId
+            combo: winningCells,
+            entryId: winnderId,
           };
         }
       } else {
@@ -178,12 +201,12 @@ export class ComboUtils extends Utils {
     }
 
     if (winnderId === 2) {
-      console.log("vertical",  inRowEntryCount);
+      console.log("vertical", inRowEntryCount);
     }
 
     inRowEntryCount = 1;
     winningCells = [];
-winningCells.push(cell)
+    winningCells.push(cell);
     //if the correct amount of matching entries not found vertically
     //starts searching diagonally
 
@@ -199,10 +222,10 @@ winningCells.push(cell)
         j++;
 
         if (inRowEntryCount == countToWin) {
-           console.log("result",result)
+          console.log("result", result);
           return {
-            combo:winningCells,
-            id:winnderId
+            combo: winningCells,
+            entryId: winnderId,
           };
         }
       } else {
@@ -221,10 +244,10 @@ winningCells.push(cell)
         i++;
         j--;
         if (inRowEntryCount == countToWin) {
-           console.log("result",result)
+          console.log("result", result);
           return {
-            combo:winningCells,
-            id:winnderId
+            combo: winningCells,
+            entryId: winnderId,
           };
         }
       } else {
@@ -233,7 +256,7 @@ winningCells.push(cell)
     }
 
     if (winnderId === 2) {
-      console.log("diag right",  inRowEntryCount);
+      console.log("diag right", inRowEntryCount);
     }
 
     //diagonally other direction
@@ -241,7 +264,7 @@ winningCells.push(cell)
 
     inRowEntryCount = 1;
     winningCells = [];
-   winningCells.push(cell);
+    winningCells.push(cell);
     i = row - 1;
     j = col - 1;
     while (i >= 0 && j >= 0) {
@@ -252,10 +275,10 @@ winningCells.push(cell)
         j--;
 
         if (inRowEntryCount == countToWin) {
-           console.log("result",result)
+          console.log("result", result);
           return {
-            combo:winningCells,
-            id:winnderId
+            combo: winningCells,
+            entryId: winnderId,
           };
         }
       } else {
@@ -274,10 +297,10 @@ winningCells.push(cell)
         i++;
         j++;
         if (inRowEntryCount == countToWin) {
-           console.log("result",result,"winningCells",winningCells)
+          console.log("result", result, "winningCells", winningCells);
           return {
-            combo:winningCells,
-            id:winnderId
+            combo: winningCells,
+            entryId: winnderId,
           };
         }
       } else {

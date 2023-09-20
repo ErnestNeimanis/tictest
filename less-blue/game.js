@@ -1,7 +1,9 @@
 
 import { Process } from "./process.js";
 import { GameData } from "./game-data.js";
-
+import { Cell } from "./cell.js";
+import { Winner } from "./winner.js";
+import { Response } from "./response.js";
 
 export class Game {
   constructor(gameData) {
@@ -18,19 +20,28 @@ export class Game {
   */
   response(inputRow, inputCol) {
 
-    if(this.gameData.getPlayField()[inputRow][inputRow] 
+    const gameData = this.gameData;
+    const process = this.process
+    const cell = new Cell(inputRow, inputCol);
+
+    if(this.gameData.getPlayField()[cell.row][cell.col] 
     != this.gameData.getEmptyCellValue()){
       throw new Error("attepting to input into an occupied cell")
     }
 
-    const algorithm = this.algorithm;
-
-    this.gameData.inputCell({inputRow,inputCol});
-    //playerin should be analized with the updated gamefield instead
-    let playerWin = this._playerWin(inputRow, inputCol);
+ 
+    gameData.inputCell(cell);
+    //playerwin should be analized with the updated gamefield instead
+    let playerWin = process.checkForWin();
     if(playerWin){
-        return playerWin;
+        return new Response(this.gameData)
     }
+
+    const cellChosenByLessBlue = process.choseCell();
+    gameData.inputCell(cellChosenByLessBlue);
+
+    let lessBlueWin = process.checkForWin(cellChosenByLessBlue);
+
 
     /*
     preform analysis of the field and chose a cell
@@ -51,10 +62,7 @@ export class Game {
     let row = 0;
     let col = 0;
 
-    let lessBlueWin = this._lessBlueWin(row,col)
-    if(lessBlueWin){
-        return lessBlueWin;
-    }
+  
 
     /*
       if here then its time to swap player turn
@@ -182,6 +190,42 @@ export class Game {
     return comboChoice;
   }
 
+fullResponse(){
+  //if no win
+  const response = {
+    row,
+    col,
+    id,
+    cell:{row,col},
+    entry:{row,col,id},
+    playField,
+    winner: {},
+    turnId,
+    playerWin:false,
+    lessBlueWin:false,
+    winnerId:undefined,
+    loserId:undefined,
+    winningCombo:{}
+  }
 
+  //if playerWin
 
+  response = {
+    row:undefined,
+    col:undefined,
+    cell:{},
+    playField,
+    winner: {
+      id,
+      combo
+    },
+    turnId,
+    playerWin:true,
+    lessBlueWin:false,
+    winnerId,
+    loserId,
+    winningCombo
+  }
+}
+  
 }

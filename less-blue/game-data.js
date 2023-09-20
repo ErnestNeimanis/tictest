@@ -1,4 +1,5 @@
 import { CombinationGenerator } from "./combination-generator.js";
+import { Winner } from "./winner.js";
 export class GameData {
   //  allCombinations;
 
@@ -9,6 +10,10 @@ export class GameData {
   //playerId;
   //lessBlueId;
 
+  //Cell is {row,col}
+  //entryId is like an enum. emptyCellValue,PlayerId,lessBlueId
+
+
   constructor(initialData) {
     this.fieldSize = initialData.fieldSize;
     this.comboLength = initialData.comboLength;
@@ -18,7 +23,16 @@ export class GameData {
     this.playField = this._createPlayField(0); //any[][]
     this.emptyCellValue = 0;
     this.activeCombos = [];
-    this.turnId = this._initialTurn(initialData.start);
+    this.turnId = this._initialTurn(initialData.start); //???
+
+
+    this.winner = {},
+    this.playerWin = false;
+    this.lessBlueWin = false;
+    this.winnerId =  undefined;
+    this.loserId = undefined;
+    this.winningCombos = [];
+
   }
 
    get() {
@@ -73,6 +87,8 @@ export class GameData {
   getPlayerId() {
     return this.playerId;
   }
+  getLessBlueId() { 
+    return this.lessBlueId}
 
   getEmptyCellValue() {
     return this.emptyCellValue;

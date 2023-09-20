@@ -227,9 +227,9 @@ export function efficientBlock (
 ) {
 
 
-  let allEmerging = [
-    ...allEmergingCombos(pfv, allCombos, opponentId, threshold),
-  ];
+  let allEmerging = allEmergingCombos(pfv, allCombos, opponentId, threshold)
+  
+  console.log("allEmerging",allEmerging)
   if (allEmerging.length == 0) {
     return false;
   }

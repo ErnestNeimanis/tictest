@@ -1,39 +1,42 @@
 import { ComboUtils } from "./combo-utils.js";
 import { Utils } from "./utils.js";
 export class Blocker extends ComboUtils {
-  constructor(gameData) {
+  constructor(gameData,threshold) {
     super(gameData);
     this.gameData = gameData;
-    this.utils = new Utils();
     this.defaultThreshold = Math.floor(this.gameData.getComboLength()/2) ;
+    this.threshold;
+    if(!threshold){
+      this.threshold = this.defaultThreshold;
+    }
   }
 
   /**
    check if blocks needed and return all possible blocks
    if no blocks needed, return an empty array
    */
-  blocks(threshold = this.defaultThreshold) {
+  blocks(threshold = this.threshold) {
     const { playerId } = this.gameData.get();
+    const blocks = this.efficientBlockingPossibilities(threshold);
+    if(!blocks){
+      return [];
+    }
+
   }
 
-  blockingPossibilities(combo, id) {
-    const { playField, emptyCellValue } = this.gameData.get();
-
-    if (comboPossible(combo, id)) {
-      return combo.filter(
-        (cell) => playField[cell.row][cell.col] === emptyCellValue
-      );
+  singleComboBlockingPossibilities(combo, opponentId) {
+    if (this.comboPossible(combo, opponentId)) {
+      return this.emptyCellsInCombo(combo);
     }
     throw new Error("no blocking possibilities for impossible combo");
   }
 
   efficientBlockingPossibilities(threshold) {
-    const utils = this.utils;
+
     const { playField, playerId, allCombos } = this.gameData.get();
 
-    let allEmerging = [
-      ...getAllEmergingCombos(playField, allCombos, playerId, threshold),
-    ];
+    let allEmerging = this.getAllEmergingCombos(playerId, threshold)
+
     if (allEmerging.length === 0) {
       return false;
     }
@@ -43,13 +46,11 @@ export class Blocker extends ComboUtils {
     let allBlocks = [];
 
     for (let i = 0; i < allEmerging.length; i++) {
-      let possibilities = [
-        ...blockingPossibilities(playField, allEmerging[i], opponentId),
-      ];
+      let possibilities = this.singleComboBlockingPossibilities(allEmerging[i], playerId);
       allBlocks.push(...possibilities);
     }
 
-    let blocks = utils.mostFrequentElements(allBlocks);
+    let blocks = this.mostFrequentElements(allBlocks);
     return blocks;
   }
 }

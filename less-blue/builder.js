@@ -5,6 +5,9 @@ export class Builder extends ComboUtils {
         this.gameData = gameData;
     }
 
+    efficientBuild(){
+        
+    }
 
 
 }
