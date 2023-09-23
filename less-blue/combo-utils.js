@@ -16,7 +16,7 @@ export class ComboUtils extends Utils {
   getAllEmergingCombos = (entryId, threshold) => {
     const { allCombos } = this.gameData.get();
     return allCombos.filter((combo) =>
-      isEmergingCombo(combo, entryId, threshold)
+      this.isEmergingCombo(combo, entryId, threshold)
     );
   };
 
@@ -24,19 +24,20 @@ export class ComboUtils extends Utils {
   isEmergingCombo(combo, entryId, threshold) {
     const { playField } = this.gameData.get();
     return (
-      comboPossible(combo, entryId) &&
-      arrayOccurances(comboEntryIds(playField, combo), entryId) >= threshold
+      this.comboPossible(combo, entryId) &&
+      this.arrayOccurances(this.comboEntryIds(combo), entryId) >= threshold
     );
   }
 
   //bool
   comboPossible(combo, entryId) {
     let combinationLength = combo.length;
-    const { playField, emptyCellValue } = this.gameData.playField;
+    const { playField, emptyCellValue } = this.gameData.get();
     for (let i = 0; i < combinationLength; i++) {
       let row = combo[i].row;
       let col = combo[i].col;
       let cellValue = playField[row][col];
+      
 
       if (cellValue != emptyCellValue && cellValue != entryId) {
         return false;
@@ -51,48 +52,65 @@ export class ComboUtils extends Utils {
     );
   }
 
-  comboEntryIds(combo, playField = this.gameData.getPlayField()) {
-    // console.log("combofromin combo",combo)
-    // console.log("playfield in cvfi",playField)
-    let values = combo.map((element) => playField[element.row][element.col]);
+  comboEntryIds(combo) {
+ 
+ 
+ 
+    const {playField} = this.gameData.get();
+
+    let values = combo.map((cell,i) => {
+ 
+ 
+     const row = cell.row;
+     const col = cell.col;
+     if(row === undefined || col === undefined){
+ 
+      throw new Error("ONE OF THESE IS UNDEFINED")
+     }
+      return playField[row][col]
+    });
+ 
     return values;
   }
 
   getAllEmergingCombos(entryId, threshold){
     const { playField, allCombos } = this.gameData.get();
     return allCombos.filter((combo) =>
-      isEmergingCombo(playField, combo, entryId, threshold)
+      this.isEmergingCombo(combo, entryId, threshold)
     );
   };
 
-  getAllCombos() {
-    return this.gameData.allCombinations;
-  }
 
-  checkForWinDumb(playField = this.gameData.getPlayField()) {
+
+  checkForWinDumb() {
+
     // const { allCombos, playField, emptyCellValue } = this.gameData.get();
-    const { allCombos, emptyCellValue } = this.gameData.get();
-
+    const { allCombos, emptyCellValue,playField } = this.gameData.get();
+ 
     let result = {};
+ 
     for (let i = 0; i < allCombos.length; i++) {
-      const comboValues = this.comboEntryIds(allCombos[i], playField);
+ 
+      const comboValues = this.comboEntryIds(allCombos[i]);
+ 
       const allEqual = comboValues.every(
-        (val) => val != emptyCellValue && val === comboValues[0]
+        (val) => { 
+        return val != emptyCellValue && val === comboValues[0]
+        }
       );
+
       if (allEqual) {
-        result = {
-          combo: allCombos[i],
-          entryId: comboValues[0],
-        };
+        
+ 
         return new Winner(allCombos[i],comboValues[0]);
       }
     }
-    return {};
+    return null;
   }
 
   checkForWinSmart(cell, playField = this.gameData.getPlayField()) {
     if (!playField) throw new Error("no playfield");
-    //console.log("playfield in checkforwin lesslblue",playField)
+ 
 
     let inRowEntryCount = 1;
     const { row, col } = cell;
@@ -100,7 +118,7 @@ export class ComboUtils extends Utils {
     let winningCombo = [];
     const countToWin = this.gameData.getComboLength();
     const { emptyCellValue } = this.gameData.get();
-    // console.log("countToWin",countToWin)
+ 
 
 
     let result = {
@@ -121,7 +139,7 @@ export class ComboUtils extends Utils {
         inRowEntryCount++;
         j++;
         if (inRowEntryCount == countToWin) {
-          //console.log("result",result)
+ 
           return new Winner(winningCombo,winnerId)
       
         }
@@ -138,7 +156,7 @@ export class ComboUtils extends Utils {
         inRowEntryCount++;
         j--;
         if (inRowEntryCount == countToWin) {
-          console.log("result", result);
+ 
            return new Winner(winningCombo,winnerId)
         }
       } else {
@@ -146,7 +164,7 @@ export class ComboUtils extends Utils {
       }
     }
     if (winnerId === 2) {
-      console.log("horizontal", inRowEntryCount);
+ 
     }
 
     //if the correct amount of matching entries not horizontally,
@@ -234,7 +252,7 @@ export class ComboUtils extends Utils {
     }
 
     if (winnerId === 2) {
-      console.log("diag right", inRowEntryCount);
+ 
     }
 
     //diagonally other direction
@@ -279,9 +297,9 @@ export class ComboUtils extends Utils {
     }
 
     if (winnerId === 2) {
-      console.log("diag left", inRowEntryCount);
+ 
     }
-    console.log("-----------");
-    return {};
+ 
+    return null;
   }
 }

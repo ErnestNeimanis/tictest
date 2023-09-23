@@ -156,14 +156,18 @@ function processGameStep(element) {
   if (element.hasChildNodes()) {
     return;
   }
-
+ 
   inputPlayfieldValue(element);
   addSymbolToParent(element);
 
+  const cell = getCell(element)
+  const response = gameAlg.nextMove(cell.row,cell.col);
+
+  console.log("lessblue response",response)
   const win = gameAlg.checkForWin(getCell(element),playFieldValues);
   console.log( "win by less blue",win)
   //console.log("win by index.js",checkForWin(getCell(element)))
-  if (win.combo) {
+  if (win) {
   
     insertWinningColors(win.combo);
     gameOver = true;
@@ -173,7 +177,7 @@ function processGameStep(element) {
 
   if (playingAgainstComputer && playerTurn === player2Turn) {
     setTimeout(() => {
-      playTurn_AI();
+      playTurn_AI(response.cell);
     }, 200);
   }
 }
@@ -486,8 +490,11 @@ function restartGame() {
 generateGameField();
 initGame();
 
+
+
+
 var gameAlg = new LessBlue(size, countToWin );
-playFieldValues = gameAlg.getPlayField();
+playFieldValues = gameAlg.getPlayFieldCopy();
 var allCombinations = [...gameAlg.getAllCombos()];
 var activeCombination = [
   ...prioratizeNewComboWithRandom(
@@ -502,7 +509,10 @@ let combo = activeCombination;
 
 const threshold = Math.floor(countToWin / 2);
 
-function playTurn_AI() {
+function playTurn_AI(cell) {
+
+return processGameStep_AI(cell)
+
   const prioratizedBlock = prioratizedBlocking(
       pf,
       allCombinations,

@@ -1,16 +1,18 @@
 import { Cell } from "./cell.js";
 import { Entry } from "./entry.js";
 import { Winner } from "./winner.js";
-export class Response {
+import { ComboUtils } from "./combo-utils.js";
+export class Response extends ComboUtils{
   constructor(gameData, responseData) {
+    super(gameData)
     this._checkArguments(gameData,responseData);
 
     this.gameData = gameData;
     this.responseData = responseData;
-
+    
    
     this.playField = gameData.getPlayField();
-    this.id = this.playField[this.row][this.col];
+  
     this.turnId = this.gameData.getTurnId();
  
    
@@ -36,12 +38,12 @@ export class Response {
 
     this._createResponse();
 
-    return this.response;
+    return this.deepCopy(this.response);
   }
 
   _createResponse() {
     if(this.responseData.row && this.responseData.col){
-      this._fillInCellData(new CellData(this.responseData.row, this.responseData.col));
+      this._fillInCellData(new Cell(this.responseData.row, this.responseData.col));
     } else if(this.responseData.combo && this.responseData.id){
       this._fillInWinnerData(new Winner(this.combo,this.id))
     } else{

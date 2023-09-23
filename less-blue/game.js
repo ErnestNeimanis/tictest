@@ -23,63 +23,45 @@ export class Game {
     const gameData = this.gameData;
     const process = this.process
     const cell = new Cell(inputRow, inputCol);
-
-    if(this.gameData.getPlayField()[cell.row][cell.col] 
-    != this.gameData.getEmptyCellValue()){
-      throw new Error("attepting to input into an occupied cell")
-    }
-
  
-    gameData.inputCell(cell);
-    //playerwin should be analized with the updated gamefield instead
+    const {playField,playerId,lessBlueId} = this.gameData.get();
+
+    this.checkCellAvailability(cell)
+ 
+
+    this.gameData.inputCell(cell,playerId);
+ 
     let playerWin = process.checkForWin();
+   
     if(playerWin){
-        return new Response(this.gameData)
+        return new Response(this.gameData,playerWin)
     }
 
+    this.swapPlayerTurn();
+    
     const cellChosenByLessBlue = process.choseCell();
-    gameData.inputCell(cellChosenByLessBlue);
+ 
+    gameData.inputCell(cellChosenByLessBlue,lessBlueId);
 
     let lessBlueWin = process.checkForWin(cellChosenByLessBlue);
+    if(lessBlueWin){
+      return new Response(this.gameData,lessBlueWin);
+    }
+    return new Response(this.gameData,cellChosenByLessBlue);
 
-
-    /*
-    preform analysis of the field and chose a cell
-    1.check if opponent has an emerging combo
-        if yes, chose an efficient block
-    
-    
-    2.check if you have emerging combo/combos
-
-    then either chose the best combo or start at random
-    input in cell
-    check for win again
-*/
-
-
-    
-
-    let row = 0;
-    let col = 0;
-
-  
-
-    /*
-      if here then its time to swap player turn
-    */
-      this.swapPlayerTurn()
-      const r = {
-        playField: this.gameData.getPlayField(),
-        entry: {row:row, col:col},
-        row,
-        col,
-        gameOver: false
-      }
-      return r;
   }
 
+
+  checkCellAvailability(cell){  
+     if(this.gameData.getEmptyCellValue()!= this.gameData.getPlayField()[0][0]){
+      throw new Error("attepting to input into an occupied cell")
+    }
+  }
+
+  responseTest(){
+
+  }
   checkForWinTest(cell,playField){
-    //console.log("playfield in game",playField)
     return this.process.checkForWin(cell,playField);
   }
 
@@ -177,14 +159,14 @@ export class Game {
         isEmergingCombo(pfv, combo, turnId, i)
       );
       if (emCombos.length > 0) {
-        console.log("starting prioritized combo with threshold: ", i);
+ 
         comboChoice = emCombos[rand(0, emCombos.length - 1)];
         this.activeCombination = comboChoice;
         return comboChoice;
       }
     }
     //throw new Error('didnt find prioritized combos')
-    //console.log('chosing new combo at random')
+ 
     comboChoice = choseRandomCombo(pfv, allCombos, AI_id);
     this.activeCombination = comboChoice;
     return comboChoice;

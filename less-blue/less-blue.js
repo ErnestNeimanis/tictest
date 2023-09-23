@@ -14,13 +14,23 @@ export class LessBlue {
     
     this.game = new Game(this.initialData);
     this.gameData = this.game.getGameData();
+ 
   }
 
   getPlayField(){
+    
     return this.gameData.getPlayField();
   }
+  getPlayFieldCopy(){
+    const copy = JSON.parse(JSON.stringify(this.gameData.getPlayField()));
+    return copy;
+  }
 
-  nextMove(row,col) {
+  nextMove(row,col) { 
+
+    const {playField} = this.gameData.get();
+    
+ 
     return this.game.response(row,col)
   }
 

@@ -107,6 +107,7 @@ export class CombinationGenerator {
   }
 
   createAllCombinations() {
+    
     return [
       ...this.horizontalCombinations(),
       ...this.verticalCombinations(),

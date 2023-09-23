@@ -97,10 +97,14 @@ export class GameData {
   getComboLength() {
     return this.comboLength;
   }
+  getTurnId() {
+    return this.turnId;
+  }
   inputCell(cell, id) {
+ 
     if (!cell.row || !cell.col || !id) {
       throw new Error("missing input");
     }
-    this.playField[(cell.row, cell.col)] = id;
+    this.playField[cell.row][cell.col] = id;
   }
 }
