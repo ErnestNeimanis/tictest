@@ -61,7 +61,7 @@ let playerColor = player1Color;
 let computerPlayed = false;
 //-----
 let playField = [];
-let playFieldValues = [];
+let playFieldValues;
 
 let winningColorIndecies = [];
 
@@ -75,6 +75,15 @@ let squareSize =
   squareBorder * 2;
 
 let squares = [];
+
+const lessBlue = new LessBlue(size,countToWin);
+playFieldValues = lessBlue.getPlayFieldCopy();
+stringlog(playFieldValues,"pfv before")
+playFieldValues[0][0] = "hello";
+stringlog(playFieldValues,"pfv after")
+stringlog(lessBlue.getPlayField(),"lessblue playfield")
+console.log("lessblue field copy",lessBlue.getPlayFieldCopy())
+
 
 function generateGameField() {
   window.addEventListener("resize", () => {
@@ -107,13 +116,23 @@ function initGameField() {
     playFieldValues[i] = [];
     for (let j = 0; j < size; j++) {
       playField[i][j] = squares[i * size + j];
-      playField[i][j].addEventListener("mousedown", () =>
-        processGameStep(playField[i][j])
+      playField[i][j].addEventListener("mousedown", () =>{
+          testingProcess(playField[i][j])
+       // console.log("in event listener before process",gameAlg.getPlayField())
+       //processGameStepWithLessBlue(playField[i][j])
+      }
+        //processGameStepWithLessBlue(playField[i][j])
       );
       //playFieldValues[i][j] = 0;
     }
   }
   // playFieldValues = gameAlg.getPlayField();
+}
+
+
+function testingProcess(element){
+  console.log("in test process",gameAlg.getPlayField());
+  processGameStepWithLessBlue(element)
 }
 
 function addIdToSquares() {
@@ -149,38 +168,72 @@ function resize() {
   }
 }
 
-function processGameStep(element) {
+
+function processGameStepWithLessBlue(element) {
   if (gameOver) {
     return;
   }
   if (element.hasChildNodes()) {
     return;
   }
- 
+
+
+  const {row,col} = getCell(element)
+
+
   inputPlayfieldValue(element);
   addSymbolToParent(element);
-
-  const cell = getCell(element)
-  const response = gameAlg.nextMove(cell.row,cell.col);
-
-  console.log("lessblue response",response)
-  const win = gameAlg.checkForWin(getCell(element),playFieldValues);
-  console.log( "win by less blue",win)
-  //console.log("win by index.js",checkForWin(getCell(element)))
-  if (win) {
+  swapPlayers()
+ console.log("playfield before response",gameAlg.getPlayField())
+  const response = gameAlg.nextMove(row,col);
   
-    insertWinningColors(win.combo);
+  console.log("response",response)
+  if(response.winner){
+    const {combo,id} = response.winner;
+    insertWinningColors(combo);
     gameOver = true;
+    return;
   }
-
+  
+  const newElement = playField[response.row][response.col];
+  inputPlayfieldValue(newElement);
+  addSymbolToParent(newElement);
   swapPlayers();
 
-  if (playingAgainstComputer && playerTurn === player2Turn) {
-    setTimeout(() => {
-      playTurn_AI(response.cell);
-    }, 200);
-  }
 }
+
+// function processGameStep(element) {
+//   console.log(element)
+//   if (gameOver) {
+//     return;
+//   }
+//   if (element.hasChildNodes()) {
+//     return;
+//   }
+
+
+ 
+//   inputPlayfieldValue(element);
+//   addSymbolToParent(element);
+
+//   const cell = getCell(element)
+//   const response = gameAlg.nextMove(cell.row,cell.col);
+//   const win = gameAlg.checkForWin(getCell(element),playFieldValues);
+ 
+//   if (win) {
+  
+//     insertWinningColors(win.combo);
+//     gameOver = true;
+//   }
+
+//   swapPlayers();
+
+//   if (playingAgainstComputer && playerTurn === player2Turn) {
+//     setTimeout(() => {
+//       playTurn_AI(response.cell);
+//     }, 200);
+//   }
+// }
 
 function addSymbolToParent(parent) {
   let symbol = document.createElement("span");
@@ -260,11 +313,11 @@ function swapToPlayerOne() {
 function getCell(element) {
   let row = parseInt(element.id / size);
   let col = parseInt(element.id % size);
-  const entry = {
+  const cell = {
     row,
     col,
   };
-  return entry;
+  return cell;
 }
 
 function checkForWin(cell) {
@@ -493,55 +546,26 @@ initGame();
 
 
 
-var gameAlg = new LessBlue(size, countToWin );
-playFieldValues = gameAlg.getPlayFieldCopy();
-var allCombinations = [...gameAlg.getAllCombos()];
-var activeCombination = [
-  ...prioratizeNewComboWithRandom(
-    playFieldValues,
-    allCombinations,
-    countToWin,
-    computersTurnId
-  ),
-];
-let pf = playFieldValues;
-let combo = activeCombination;
+
+
+
+//var allCombinations = [...gameAlg.getAllCombos()];
+// var activeCombination = [
+//   ...prioratizeNewComboWithRandom(
+//     playFieldValues,
+//     allCombinations,
+//     countToWin,
+//     computersTurnId
+//   ),
+// ];
+
+//let combo = activeCombination;
 
 const threshold = Math.floor(countToWin / 2);
 
 function playTurn_AI(cell) {
 
-return processGameStep_AI(cell)
 
-  const prioratizedBlock = prioratizedBlocking(
-      pf,
-      allCombinations,
-      countToWin,
-      humanPlayersTurn,
-      threshold)
-   
-  if (prioratizedBlock)
-   {
-    processGameStep_AI(prioratizedBlock);
-    return;
-  }
-  //if an the active combination is still possible then enter into it randomly
-  if (comboPossible(pf, activeCombination, computersTurnId)) {
-    processGameStep_AI(randomEntryInCombo(playFieldValues, activeCombination));
-   // console.log("bulding combo");
-  } else {
-    activeCombination = [
-      ...prioratizeNewComboWithRandom(
-        playFieldValues,
-        allCombinations,
-        countToWin,
-        computersTurnId
-      ),
-    ];
-    processGameStep_AI(randomEntryInCombo(playFieldValues, activeCombination));
-    console.log("starting new combo");
-  }
-}
 
 function processGameStep_AI(indecies) {
   let row = indecies.row;
@@ -549,7 +573,7 @@ function processGameStep_AI(indecies) {
 
   processGameStep(playField[row][col]);
 }
-
+}
 //testDisp(100)
 function testDisp(ms) {
   let i = 0;
@@ -589,6 +613,15 @@ function testDisp1(ms, combos) {
     }
     k++;
   }, ms);
+}
+
+
+function stringlog(obj,msg){
+  if(msg){
+    console.log(msg,JSON.parse(JSON.stringify(obj)))
+    return;
+  }
+  console.log(JSON.parse(JSON.stringify(obj)))
 }
 
 //welcome screen

@@ -12,7 +12,6 @@ export class Response extends ComboUtils{
     
    
     this.playField = gameData.getPlayField();
-  
     this.turnId = this.gameData.getTurnId();
  
    
@@ -24,12 +23,12 @@ export class Response extends ComboUtils{
       row: undefined,
       col: undefined,
       id: undefined,
-      cell: undefined,
-      entry: {},
+      cell: null,
+      entry: null,
 
-      winner: {},
+      winner: null,
       winnerId: undefined,
-      winningCombo: [],
+      winningCombo: null,
       playerWin: false,
       lessBlueWin: false,
       loserId: undefined,
@@ -45,7 +44,7 @@ export class Response extends ComboUtils{
     if(this.responseData.row && this.responseData.col){
       this._fillInCellData(new Cell(this.responseData.row, this.responseData.col));
     } else if(this.responseData.combo && this.responseData.id){
-      this._fillInWinnerData(new Winner(this.combo,this.id))
+      this._fillInWinnerData(new Winner(this.responseData.combo,this.responseData.id))
     } else{
       throw new Error("'responseData' has invalid argument");
     }
@@ -76,7 +75,7 @@ export class Response extends ComboUtils{
     response.winningCombo = winner.combo;
     response.loserId = loserId;
     response.playerWin = winnerId === playerId;
-    response.lessBlueWin = winnerId = lessBlueId;
+    response.lessBlueWin = winnerId === lessBlueId;
 
   }
 

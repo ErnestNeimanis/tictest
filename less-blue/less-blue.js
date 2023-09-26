@@ -1,9 +1,42 @@
 
 import { Game } from "./game.js";
 import { GameData } from "./game-data.js";
+import { Utils } from "./utils.js";
 
-export class LessBlue {
-  constructor(fieldSize, comboLength,start = true, playerId =1, lessBlueId=2) {
+export class LessBlue extends Utils{
+  constructor(fieldSize, comboLength,start = true, playerId ="pl", lessBlueId="lb") {
+    super();
+    this.initialData = {
+      fieldSize: fieldSize,
+      comboLength: comboLength,
+      start:start,
+      playerId: playerId,
+      lessBlueId: lessBlueId,
+    };
+    
+    this.game = new Game(this.initialData);
+    this.gameData = this.game.getGameData();
+
+ 
+  }
+
+  getPlayField(){
+    
+    return this.gameData.getPlayField();
+  }
+  getPlayFieldCopy(){
+    const copy = this.deepCopy(this.gameData.getPlayField())
+    return copy;
+  }
+
+  nextMove(row,col) { 
+    const {playField} = this.gameData.get();
+    console.log(playField)
+    return this.game.response(row,col)
+  }
+
+
+  restart(fieldSize, comboLength,start = true, playerId =1, lessBlueId=2){
     this.initialData = {
       fieldSize: fieldSize,
       comboLength: comboLength,
@@ -16,24 +49,6 @@ export class LessBlue {
     this.gameData = this.game.getGameData();
  
   }
-
-  getPlayField(){
-    
-    return this.gameData.getPlayField();
-  }
-  getPlayFieldCopy(){
-    const copy = JSON.parse(JSON.stringify(this.gameData.getPlayField()));
-    return copy;
-  }
-
-  nextMove(row,col) { 
-
-    const {playField} = this.gameData.get();
-    
- 
-    return this.game.response(row,col)
-  }
-
   //if win, return the winning combo, winners entry id, and the gamefield
   //else return false 
   checkForWin(cell,playField){

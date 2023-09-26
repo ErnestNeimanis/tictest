@@ -17,7 +17,7 @@ export class Blocker extends ComboUtils {
    */
   blocks(threshold = this.threshold) {
     const blocks = this.efficientBlockingPossibilities(threshold);
-    if(!blocks){
+    if(blocks.length === 0){
       return [];
     }
 
@@ -33,11 +33,11 @@ export class Blocker extends ComboUtils {
   efficientBlockingPossibilities(threshold) {
 
     const { playField, playerId, allCombos } = this.gameData.get();
-
-    let allEmerging = this.getAllEmergingCombos(playerId, threshold)
-
+    console.log("treshold in efficient",threshold)
+    let allEmerging = this.getAllEmergingCombos(playerId, threshold,"from blocker")
+    console.log("all emerging in efficient",allEmerging)
     if (allEmerging.length === 0) {
-      return false;
+      return [];
     }
     /**
      * @type {Array<{row:number,col:number}>}

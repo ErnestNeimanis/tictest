@@ -28,7 +28,7 @@ export class Builder extends ComboUtils {
     } = this.gameData.get();
 
 
-    let allEmerging = this.getAllEmergingCombos(lessBlueId,threshold);
+    let allEmerging = this.getAllEmergingCombos(lessBlueId,threshold,"from builder");
     
 
     if(allEmerging.length === 0){

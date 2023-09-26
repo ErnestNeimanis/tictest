@@ -1,5 +1,6 @@
 import { CombinationGenerator } from "./combination-generator.js";
 import { Winner } from "./winner.js";
+import { Utils } from "./utils.js";
 export class GameData {
   //  allCombinations;
 
@@ -26,12 +27,7 @@ export class GameData {
     this.turnId = this._initialTurn(initialData.start); //???
 
 
-    this.winner = {},
-    this.playerWin = false;
-    this.lessBlueWin = false;
-    this.winnerId =  undefined;
-    this.loserId = undefined;
-    this.winningCombos = [];
+ 
 
   }
 
@@ -68,7 +64,7 @@ export class GameData {
       this.turnId = turnId;
       return;
     }
-    this.turnId = !this.turnId;
+    this.turnId = this.turnId === this.playerId ? this.lessBlueId : this.playerId;
   }
 
   getActiveCombination(index) {
@@ -100,11 +96,17 @@ export class GameData {
   getTurnId() {
     return this.turnId;
   }
+ 
   inputCell(cell, id) {
  
-    if (!cell.row || !cell.col || !id) {
+    if (typeof cell.row !== 'number'  ||
+     typeof cell.col !== 'number' || 
+     id == undefined) {
       throw new Error("missing input");
     }
+
+
+
     this.playField[cell.row][cell.col] = id;
   }
 }
