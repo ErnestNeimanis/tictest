@@ -14,38 +14,43 @@ export class ComboUtils extends Utils {
 
   //{row,coll}[][]
   getAllEmergingCombos(entryId, threshold,test) {
-    const { allCombos } = this.gameData.get();
-   // console.log("entry id in[] get all emerging",entryId,"threshold",threshold,"test",test,)
+
+
+    const { allCombos,instanceId } = this.gameData.get();
+ 
+    console.log(instanceId)
+    this.logPlayField("in combo utils");
+
     const allEmerging  = allCombos.filter((combo) => {
       const isEmerging = this.isEmergingCombo(combo, entryId, threshold)
     if(isEmerging){
-      console.log("is emerging")
+ 
     }
     
-    //   console.log("checking single",combo,entryId,threshold,
+ 
     //  "result:",isEmerging,"-----")
       return this.isEmergingCombo(combo, entryId, threshold)
     }
       
     );
     
-   console.log("all emerging in getallemerging",allEmerging)
+ 
    return allEmerging
   };
 
   //bool
   isEmergingCombo(combo, entryId, threshold) {
     const { playField,allCombos,playerId } = this.gameData.get();
-   // console.log("entryId in isEmerging",entryId)
+ 
     const possible =  this.comboPossible(combo, entryId)
     const arrayOccurances = this.arrayOccurances(this.comboEntryIds(combo), entryId)
     if(possible){
-     // console.log("possible")
+ 
     }
-   //console.log(playField)
-   // console.log(this.arrayOccurances(allCombos[0],playerId))
+ 
+ 
     if(arrayOccurances > 0){
-       console.log(arrayOccurances)
+ 
     }
    
 
@@ -83,6 +88,8 @@ export class ComboUtils extends Utils {
  
  
     const {playField} = this.gameData.get();
+
+  //  console.log("first cell",playField[0][0])
 
     let values = combo.map((cell,i) => {
  
@@ -328,4 +335,16 @@ export class ComboUtils extends Utils {
  
     return null;
   }
+
+
+logPlayField(msg){
+    if(msg){
+      console.log(msg)
+    }
+    const {playField} = this.gameData.get();
+     playField.forEach(row => row.forEach( (cell) => { 
+      console.log(cell)
+    }))
+  }
+
 }

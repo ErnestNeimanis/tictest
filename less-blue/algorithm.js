@@ -8,7 +8,7 @@ export class Algorithm extends ComboUtils {
      * playField,emptyCellId,playerId,lessBlueId
      */
     super(gameData);
-    this.gameData = new GameData(gameData);
+    this.gameData = gameData;
     this.builder = new Builder(this.gameData);
     this.blocker = new Blocker(this.gameData);
   }
@@ -18,13 +18,13 @@ export class Algorithm extends ComboUtils {
     const builder = this.builder;
     const blocks = blocker.blocks();
  
-    console.log("blocks in alg",blocks)
-    console.log("=======================================================")
+   // console.log("blocks in alg",blocks)
+    //console.log("=======================================================")
     if(blocks.length > 0){
       return blocks[this.rand(0,blocks.length-1)]
     }
     const entries = builder.entries(1);
-    console.log("entries in alg",entries)
+    //console.log("entries in alg",entries)
     return entries[this.rand(0,entries.length-1)];
   }
   

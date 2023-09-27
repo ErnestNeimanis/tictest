@@ -33,9 +33,14 @@ export class Blocker extends ComboUtils {
   efficientBlockingPossibilities(threshold) {
 
     const { playField, playerId, allCombos } = this.gameData.get();
-    console.log("treshold in efficient",threshold)
+    
     let allEmerging = this.getAllEmergingCombos(playerId, threshold,"from blocker")
-    console.log("all emerging in efficient",allEmerging)
+   // console.log("alllEmerging",allEmerging)
+    
+    const firstComboValues = this.comboEntryIds(allCombos[0])
+   // console.log(firstComboValues)
+
+
     if (allEmerging.length === 0) {
       return [];
     }

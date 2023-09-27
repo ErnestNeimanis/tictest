@@ -16,6 +16,7 @@ export class LessBlue extends Utils{
     
     this.game = new Game(this.initialData);
     this.gameData = this.game.getGameData();
+    console.log(this.gameData.instanceId)
 
  
   }
@@ -31,7 +32,7 @@ export class LessBlue extends Utils{
 
   nextMove(row,col) { 
     const {playField} = this.gameData.get();
-    console.log(playField)
+ 
     return this.game.response(row,col)
   }
 

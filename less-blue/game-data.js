@@ -15,7 +15,8 @@ export class GameData {
   //entryId is like an enum. emptyCellValue,PlayerId,lessBlueId
 
 
-  constructor(initialData) {
+  constructor(initialData,instanceId) {
+    this.instanceId = instanceId;
     this.fieldSize = initialData.fieldSize;
     this.comboLength = initialData.comboLength;
     this.playerId = initialData.playerId;
@@ -33,6 +34,9 @@ export class GameData {
 
    get() {
     return {
+
+      instanceId: this.instanceId,
+
       fieldSize: this.fieldSize,
       comboLength: this.comboLength,
       playerId: this.playerId,

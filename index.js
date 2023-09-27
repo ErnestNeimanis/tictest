@@ -78,11 +78,7 @@ let squares = [];
 
 const lessBlue = new LessBlue(size,countToWin);
 playFieldValues = lessBlue.getPlayFieldCopy();
-stringlog(playFieldValues,"pfv before")
-playFieldValues[0][0] = "hello";
-stringlog(playFieldValues,"pfv after")
-stringlog(lessBlue.getPlayField(),"lessblue playfield")
-console.log("lessblue field copy",lessBlue.getPlayFieldCopy())
+
 
 
 function generateGameField() {
@@ -117,23 +113,13 @@ function initGameField() {
     for (let j = 0; j < size; j++) {
       playField[i][j] = squares[i * size + j];
       playField[i][j].addEventListener("mousedown", () =>{
-          testingProcess(playField[i][j])
-       // console.log("in event listener before process",gameAlg.getPlayField())
-       //processGameStepWithLessBlue(playField[i][j])
+          processGameStepWithLessBlue(playField[i][j])
       }
-        //processGameStepWithLessBlue(playField[i][j])
       );
-      //playFieldValues[i][j] = 0;
     }
   }
-  // playFieldValues = gameAlg.getPlayField();
 }
 
-
-function testingProcess(element){
-  console.log("in test process",gameAlg.getPlayField());
-  processGameStepWithLessBlue(element)
-}
 
 function addIdToSquares() {
   for (let i = 0; i < squares.length; i++) {
@@ -184,8 +170,8 @@ function processGameStepWithLessBlue(element) {
   inputPlayfieldValue(element);
   addSymbolToParent(element);
   swapPlayers()
- console.log("playfield before response",gameAlg.getPlayField())
-  const response = gameAlg.nextMove(row,col);
+
+  const response = lessBlue.nextMove(row,col);
   
   console.log("response",response)
   if(response.winner){

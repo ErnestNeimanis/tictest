@@ -7,7 +7,7 @@ import { Response } from "./response.js";
 
 export class Game {
   constructor(initialData) {
-    this.gameData = new GameData(initialData);
+    this.gameData = new GameData(initialData,"instance-game");
     this.process = new Process(this.gameData);
   }
   
@@ -23,12 +23,16 @@ export class Game {
     const gameData = this.gameData;
     const process = this.process
     const cell = new Cell(inputRow, inputCol);
-    const {playField,playerId,lessBlueId} = this.gameData.get();
+    const {playField,playerId,lessBlueId,instanceId} = this.gameData.get();
  
     this.checkCellAvailability(cell)
       
+    console.log(instanceId)
     this.gameData.inputCell(cell,playerId);
-  
+    
+ 
+
+
     let playerWin = process.checkForWin();
     if(playerWin){
         return new Response(this.gameData,playerWin)
@@ -74,14 +78,15 @@ export class Game {
     return this.gameData;
   }
 
-  _choseCell(){
-
+  logPlayField(msg){
+    if(msg){
+      console.log(msg)
+    }
+    const {playField} = this.gameData.get();
+     playField.forEach(row => row.forEach( (cell) => { 
+      console.log(cell)
+    }))
   }
-
-  _inputCell(entry,id){
-    
-  }
-
  
 
 
