@@ -490,6 +490,8 @@ function checkForWin(cell) {
 // }
 
 function insertWinningColors(winningCombo) {
+  console.log("winning",winningCombo)
+  console.log(playField[0][0])
   winningCombo.forEach((cell) => {
     playField[cell.row][cell.col].firstChild.style.color = "green";
   })

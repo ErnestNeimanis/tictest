@@ -27,7 +27,7 @@ export class Game {
  
     this.checkCellAvailability(cell)
       
-    console.log(instanceId)
+ 
     this.gameData.inputCell(cell,playerId);
     
  
@@ -80,11 +80,11 @@ export class Game {
 
   logPlayField(msg){
     if(msg){
-      console.log(msg)
+ 
     }
     const {playField} = this.gameData.get();
      playField.forEach(row => row.forEach( (cell) => { 
-      console.log(cell)
+ 
     }))
   }
  

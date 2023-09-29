@@ -13,16 +13,16 @@ export class ComboUtils extends Utils {
   }
 
   //{row,coll}[][]
-  getAllEmergingCombos(entryId, threshold,test) {
+  getAllEmergingCombos(entryId, threshold) {
 
 
     const { allCombos,instanceId } = this.gameData.get();
  
-    console.log(instanceId)
+
     this.logPlayField("in combo utils");
 
     const allEmerging  = allCombos.filter((combo) => {
-      const isEmerging = this.isEmergingCombo(combo, entryId, threshold)
+    const isEmerging = this.isEmergingCombo(combo, entryId, threshold)
     if(isEmerging){
  
     }
@@ -84,13 +84,21 @@ export class ComboUtils extends Utils {
     );
   }
 
+
+  emptyCellsInMultipleCombos(combos) {
+    const cells = [];
+    if(combos.length ===0) return []
+    combos.forEach(combo => cells.push(...this.emptyCellsInCombo(combo)));
+    return cells;
+  }
+
   comboEntryIds(combo) {
  
  
  
     const {playField} = this.gameData.get();
 
-  //  console.log("first cell",playField[0][0])
+ 
 
     let values = combo.map((cell,i) => {
  
@@ -340,11 +348,11 @@ export class ComboUtils extends Utils {
 
 logPlayField(msg){
     if(msg){
-      console.log(msg)
+ 
     }
     const {playField} = this.gameData.get();
      playField.forEach(row => row.forEach( (cell) => { 
-      console.log(cell)
+ 
     }))
   }
 
