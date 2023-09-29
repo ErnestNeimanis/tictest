@@ -12,9 +12,18 @@ export class Builder extends ComboUtils {
   }
 
   singleComboEntryPossibilities(combo, id) {
-    if (this.comboPossible(combo, id)) {
-      return this.emptyCellsInCombo(combo);
+ 
+    const possible = this.comboPossible(combo,id);
+ 
+    if(possible){
+      const emptyCells = this.emptyCellsInCombo(combo);
+ 
+      return emptyCells;
     }
+
+    // if (this.comboPossible(combo, id)) {
+    //   return this.emptyCellsInCombo(combo);
+    // }
   }
 
   efficientEntryPossibilities(threshold) {
@@ -39,7 +48,8 @@ export class Builder extends ComboUtils {
     let allEntries = []
 
     for(let i = 0; i < allEmerging.length; i++){
-        let possibilities = this.singleComboEntryPossibilities(allEmerging[i]);
+        let possibilities = this.singleComboEntryPossibilities(allEmerging[i],lessBlueId);
+ 
         allEntries.push(...possibilities);
     }
 

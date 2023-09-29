@@ -20,7 +20,7 @@ export class Blocker extends ComboUtils {
     if(blocks.length === 0){
       return [];
     }
-
+    return blocks;
   }
 
   singleComboBlockingPossibilities(combo, opponentId) {

@@ -46,7 +46,7 @@ export class Utils {
 
   //returns an array of all most frequent elements
   mostFrequentElements(array) {
-    let newArr = stringifyArrayElements(array);
+    let newArr = this.stringifyArrayElements(array);
     let maxCount = 0;
     let indexes = new Set();
 

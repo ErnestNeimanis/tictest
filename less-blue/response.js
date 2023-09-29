@@ -41,12 +41,14 @@ export class Response extends ComboUtils{
   }
 
   _createResponse() {
-    if(this.responseData.row && this.responseData.col){
+    if(typeof this.responseData.row ==="number" && typeof this.responseData.col === "number"){
       this._fillInCellData(new Cell(this.responseData.row, this.responseData.col));
-    } else if(this.responseData.combo && this.responseData.id){
+    } else if(this.responseData.combo && typeof this.responseData.id !== "undefined"){
       this._fillInWinnerData(new Winner(this.responseData.combo,this.responseData.id))
     } else{
+      console.log("invalid data",this.gameData,this.responseData)
       throw new Error("'responseData' has invalid argument");
+    
     }
   }
 

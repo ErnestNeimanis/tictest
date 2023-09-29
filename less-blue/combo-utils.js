@@ -64,6 +64,7 @@ export class ComboUtils extends Utils {
   comboPossible(combo, entryId) {
     let combinationLength = combo.length;
     const { playField, emptyCellValue } = this.gameData.get();
+   
     for (let i = 0; i < combinationLength; i++) {
       let row = combo[i].row;
       let col = combo[i].col;
@@ -77,7 +78,7 @@ export class ComboUtils extends Utils {
     return true;
   }
   emptyCellsInCombo(combo) {
-    const { playField } = this.gameData.get();
+    const { playField,emptyCellValue } = this.gameData.get();
     return combo.filter(
       (cell) => playField[cell.row][cell.col] === emptyCellValue
     );
