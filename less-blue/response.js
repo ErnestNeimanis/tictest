@@ -39,11 +39,12 @@ export class Response extends ComboUtils{
 
     return this.deepCopy(this.response);
   }
-
+// if less blue wins, response must have a response cell and winner
   _createResponse() {
     if(typeof this.responseData.row ==="number" && typeof this.responseData.col === "number"){
       this._fillInCellData(new Cell(this.responseData.row, this.responseData.col));
-    } else if(this.responseData.combo && typeof this.responseData.id !== "undefined"){
+    }
+    if(this.responseData.combo && typeof this.responseData.id !== "undefined"){
       this._fillInWinnerData(new Winner(this.responseData.combo,this.responseData.id))
     } else{
       console.log("invalid data",this.gameData,this.responseData)
@@ -51,6 +52,11 @@ export class Response extends ComboUtils{
     
     }
   }
+
+  // __createResponse(){
+  //   const responseData = this.responseData;
+    
+  // }
 
   _fillInCellData(cell) {
   

@@ -31,7 +31,7 @@ const playerTurnText = document.querySelector("#playerTurnText");
 
 //input field size and combi lenth
 let size = 15;
-let countToWin = 7;
+let countToWin = 5;
 //
 
 //two platyers or against computer
@@ -188,38 +188,38 @@ function processGameStepWithLessBlue(element) {
 
 }
 
-// function processGameStep(element) {
-//   console.log(element)
-//   if (gameOver) {
-//     return;
-//   }
-//   if (element.hasChildNodes()) {
-//     return;
-//   }
+function processGameStep(element) {
+  console.log(element)
+  if (gameOver) {
+    return;
+  }
+  if (element.hasChildNodes()) {
+    return;
+  }
 
 
  
-//   inputPlayfieldValue(element);
-//   addSymbolToParent(element);
+  inputPlayfieldValue(element);
+  addSymbolToParent(element);
 
-//   const cell = getCell(element)
-//   const response = gameAlg.nextMove(cell.row,cell.col);
-//   const win = gameAlg.checkForWin(getCell(element),playFieldValues);
+  const cell = getCell(element)
+  const response = gameAlg.nextMove(cell.row,cell.col);
+  const win = gameAlg.checkForWin(getCell(element),playFieldValues);
  
-//   if (win) {
+  if (win) {
   
-//     insertWinningColors(win.combo);
-//     gameOver = true;
-//   }
+    insertWinningColors(win.combo);
+    gameOver = true;
+  }
 
-//   swapPlayers();
+  swapPlayers();
 
-//   if (playingAgainstComputer && playerTurn === player2Turn) {
-//     setTimeout(() => {
-//       playTurn_AI(response.cell);
-//     }, 200);
-//   }
-// }
+  if (playingAgainstComputer && playerTurn === player2Turn) {
+    setTimeout(() => {
+      playTurn_AI(response.cell);
+    }, 200);
+  }
+}
 
 function addSymbolToParent(parent) {
   let symbol = document.createElement("span");

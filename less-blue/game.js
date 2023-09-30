@@ -26,8 +26,7 @@ export class Game {
     const {playField,playerId,lessBlueId,instanceId} = this.gameData.get();
  
     this.checkCellAvailability(cell)
-      
- 
+
     this.gameData.inputCell(cell,playerId);
     
  

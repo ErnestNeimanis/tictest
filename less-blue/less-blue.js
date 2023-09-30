@@ -16,9 +16,7 @@ export class LessBlue extends Utils{
     
     this.game = new Game(this.initialData);
     this.gameData = this.game.getGameData();
- 
 
- 
   }
 
   getPlayField(){

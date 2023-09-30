@@ -36,9 +36,7 @@ export class Builder extends ComboUtils {
       comboLength,
     } = this.gameData.get();
 
-    const emergingSorted = this.emergingSortedByThresholds(lessBlueId,1);
-    
-    
+    const emergingSorted = this.emergingSortedByThresholds(lessBlueId, 1);
 
     let allEmerging = this.getAllEmergingCombos(lessBlueId, threshold);
 
@@ -52,37 +50,27 @@ export class Builder extends ComboUtils {
 
     let allEntries = this.emptyCellsInMultipleCombos(emergingSorted[0]);
 
-
-    // for (let i = 0; i < allEmerging.length; i++) {
-    //   let possibilities = this.singleComboEntryPossibilities(
-    //     allEmerging[i],
-    //     lessBlueId
-    //   );
-
-    //   allEntries.push(...possibilities);
-    // }
-
+ 
     let possibilities = this.mostFrequentElements(allEntries);
-     console.log("builder returningpossibviltioes",possibilities)
+    console.log("builder returningpossibviltioes", possibilities);
     return possibilities;
   }
 
   emergingSortedByThresholds(id, threshold) {
-    const { allCombos, comboLength,playerId } = this.gameData.get();
+    const { allCombos, comboLength, playerId } = this.gameData.get();
     const combos = [];
-    //let allEmerging = this.getAllEmergingCombos(id, threshold);
 
     for (let i = comboLength; i >= threshold; i--) {
-        
       const tempThreshold = i;
-      let emerging = []
-      emerging = allCombos.filter(combo => this.isEmergingCombo(combo,id,tempThreshold))
- 
-     if(emerging.length > 0){
-      combos.push(emerging);
-     }
+      let emerging = [];
+      emerging = allCombos.filter((combo) =>
+        this.isEmergingCombo(combo, id, tempThreshold)
+      );
+
+      if (emerging.length > 0) {
+        combos.push(emerging);
+      }
     }
- 
 
     return combos;
   }
@@ -93,7 +81,6 @@ export class Builder extends ComboUtils {
       const tempThreshold = i;
       const emerging = this.getAllEmergingCombos(lessBlueId, tempThreshold);
       if (emerging.length > 0) {
- 
         return emerging;
       }
     }
