@@ -1,7 +1,7 @@
 export class Utils {
   constructor() {}
 
-  arrayOccurances(array, id) {
+  arrayOccurrences(array, id) {
     return array.reduce((count, val) => (val === id ? count + 1 : count), 0);
   }
 
@@ -35,7 +35,7 @@ export class Utils {
     let maxCount = 0;
 
     for (let i = 0; i < newArr.length; i++) {
-      let occurances = this.arrayOccurances(newArr, newArr[i]);
+      let occurances = this.arrayOccurences(newArr, newArr[i]);
       if (occurances > maxCount) {
         maxCount = occurances;
         resultIndex = i;
@@ -45,27 +45,31 @@ export class Utils {
   }
 
   //returns an array of all most frequent elements
-  mostFrequentElements(array) {
-    let newArr = this.stringifyArrayElements(array);
-    let maxCount = 0;
-    let indexes = new Set();
+ mostFrequentElements(array) {
+  let newArr = this.stringifyArrayElements(array);
+  let maxCount = 0;
+  let indexes = new Set();
 
-    for (let i = 0; i < newArr.length; i++) {
-      /**
-       * @type {number}
-       */
-      let occurances = this.arrayOccurances(newArr, newArr[i]);
+  // Find the maximum occurrence count
+  for (let i = 0; i < newArr.length; i++) {
+    let occurances = this.arrayOccurrences(newArr, newArr[i]);
 
-      if (occurances > maxCount) {
-        maxCount = occurances;
-        indexes = [i];
-      }
-      if (occurances === maxCount) {
-        indexes.push(i);
-      }
+    if (occurances > maxCount) {
+      maxCount = occurances;
     }
-    return Array.from(new Set(indexes.map((i) => array[i])));
   }
+
+  // Find elements that match the maximum occurrence count
+  for (let i = 0; i < newArr.length; i++) {
+    let occurances = this.arrayOccurrences(newArr, newArr[i]);
+
+    if (occurances === maxCount) {
+      indexes.add(i);
+    }
+  }
+
+  return Array.from(indexes).map((i) => array[i]);
+}
 
   //returns one of the most requent elements at random
   mostFrequentRandom(array) {
@@ -99,5 +103,11 @@ export class Utils {
     }
 
     return objCopy;
+  }
+
+  //distinct aint workin
+  distinct(array){
+    
+    return Array.from(new Set(array))
   }
 }

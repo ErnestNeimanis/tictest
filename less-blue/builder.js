@@ -48,7 +48,7 @@ export class Builder extends ComboUtils {
       return [randomCell];
     }
 
-    let allEntries = this.emptyCellsInMultipleCombos(emergingSorted[0]);
+    let allEntries = this.emptyCellsFromMultipleCombos(emergingSorted[0]);
 
  
     let possibilities = this.mostFrequentElements(allEntries);

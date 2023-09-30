@@ -43,20 +43,20 @@ export class ComboUtils extends Utils {
     const { playField,allCombos,playerId } = this.gameData.get();
  
     const possible =  this.comboPossible(combo, entryId)
-    const arrayOccurances = this.arrayOccurances(this.comboEntryIds(combo), entryId)
+    const arrayOccurrences = this.arrayOccurrences(this.comboEntryIds(combo), entryId)
     if(possible){
  
     }
  
  
-    if(arrayOccurances > 0){
+    if(arrayOccurrences > 0){
  
     }
    
 
     return (
       this.comboPossible(combo, entryId) &&
-      this.arrayOccurances(this.comboEntryIds(combo), entryId) >= threshold
+      this.arrayOccurrences(this.comboEntryIds(combo), entryId) >= threshold
     );
   }
 
@@ -85,7 +85,7 @@ export class ComboUtils extends Utils {
   }
 
 
-  emptyCellsInMultipleCombos(combos) {
+  emptyCellsFromMultipleCombos(combos) {
     const cells = [];
     if(combos.length ===0) return []
     combos.forEach(combo => cells.push(...this.emptyCellsInCombo(combo)));
@@ -127,7 +127,7 @@ export class ComboUtils extends Utils {
     const { allCombos, comboLength } = this.gameData.get();
     const combos = [];
 
-    for (let i = comboLength; i >= threshold; i--) {
+    for (let i = comboLength-1; i >= threshold; i--) {
       const tempThreshold = i;
       let emerging = [];
       emerging = allCombos.filter((combo) =>
@@ -135,7 +135,7 @@ export class ComboUtils extends Utils {
       );
 
       if (emerging.length > 0) {
-        combos.push(emerging);
+        combos.push(this.distinct(emerging));
       }
     }
 

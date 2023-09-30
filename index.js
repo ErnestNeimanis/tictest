@@ -128,7 +128,12 @@ function resize() {
   }
 }
 
+let pause = false;
+
 function processGameStepWithLessBlue(element) {
+  if(pause){
+    return;
+  }
   if (gameOver) {
     return;
   }
@@ -143,6 +148,11 @@ function processGameStepWithLessBlue(element) {
   swapPlayers();
 
   const response = lessBlue.nextMove(row, col);
+
+  pause = true;
+  setTimeout(()=>{
+    pause = false
+  },2000)
 
   console.log("response", response);
 
@@ -160,6 +170,11 @@ function processGameStepWithLessBlue(element) {
     return;
   }
 }
+
+///emerg-vicinity
+//compare threat of emerging vs potential emerge
+//
+
 
 function processGameStep(element) {
   console.log(element);
