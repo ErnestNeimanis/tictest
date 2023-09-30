@@ -76,10 +76,8 @@ let squareSize =
 
 let squares = [];
 
-const lessBlue = new LessBlue(size,countToWin);
+const lessBlue = new LessBlue(size, countToWin);
 playFieldValues = lessBlue.getPlayFieldCopy();
-
-
 
 function generateGameField() {
   window.addEventListener("resize", () => {
@@ -112,14 +110,12 @@ function initGameField() {
     playFieldValues[i] = [];
     for (let j = 0; j < size; j++) {
       playField[i][j] = squares[i * size + j];
-      playField[i][j].addEventListener("mousedown", () =>{
-          processGameStepWithLessBlue(playField[i][j])
-      }
-      );
+      playField[i][j].addEventListener("mousedown", () => {
+        processGameStepWithLessBlue(playField[i][j]);
+      });
     }
   }
 }
-
 
 function addIdToSquares() {
   for (let i = 0; i < squares.length; i++) {
@@ -154,7 +150,6 @@ function resize() {
   }
 }
 
-
 function processGameStepWithLessBlue(element) {
   if (gameOver) {
     return;
@@ -163,33 +158,33 @@ function processGameStepWithLessBlue(element) {
     return;
   }
 
-
-  const {row,col} = getCell(element)
-
+  const { row, col } = getCell(element);
 
   inputPlayfieldValue(element);
   addSymbolToParent(element);
-  swapPlayers()
+  swapPlayers();
 
-  const response = lessBlue.nextMove(row,col);
-  
-  console.log("response",response)
-  if(response.winner){
-    const {combo,id} = response.winner;
+  const response = lessBlue.nextMove(row, col);
+
+  console.log("response", response);
+
+  if (response.cell) {
+    const newElement = playField[response.row][response.col];
+    inputPlayfieldValue(newElement);
+    addSymbolToParent(newElement);
+    swapPlayers();
+  }
+
+  if (response.winner) {
+    const { combo, id } = response.winner;
     insertWinningColors(combo);
     gameOver = true;
     return;
   }
-  
-  const newElement = playField[response.row][response.col];
-  inputPlayfieldValue(newElement);
-  addSymbolToParent(newElement);
-  swapPlayers();
-
 }
 
 function processGameStep(element) {
-  console.log(element)
+  console.log(element);
   if (gameOver) {
     return;
   }
@@ -197,17 +192,14 @@ function processGameStep(element) {
     return;
   }
 
-
- 
   inputPlayfieldValue(element);
   addSymbolToParent(element);
 
-  const cell = getCell(element)
-  const response = gameAlg.nextMove(cell.row,cell.col);
-  const win = gameAlg.checkForWin(getCell(element),playFieldValues);
- 
+  const cell = getCell(element);
+  const response = gameAlg.nextMove(cell.row, cell.col);
+  const win = gameAlg.checkForWin(getCell(element), playFieldValues);
+
   if (win) {
-  
     insertWinningColors(win.combo);
     gameOver = true;
   }
@@ -311,8 +303,6 @@ function checkForWin(cell) {
 
   let row = cell.row;
   let col = cell.col;
-
-
 
   let entry = playFieldValues[row][col];
   let winningIndecies = [[row, col]];
@@ -490,11 +480,11 @@ function checkForWin(cell) {
 // }
 
 function insertWinningColors(winningCombo) {
-  console.log("winning",winningCombo)
-  console.log(playField[0][0])
+  console.log("winning", winningCombo);
+  console.log(playField[0][0]);
   winningCombo.forEach((cell) => {
     playField[cell.row][cell.col].firstChild.style.color = "green";
-  })
+  });
 }
 
 //
@@ -531,12 +521,6 @@ function restartGame() {
 generateGameField();
 initGame();
 
-
-
-
-
-
-
 //var allCombinations = [...gameAlg.getAllCombos()];
 // var activeCombination = [
 //   ...prioratizeNewComboWithRandom(
@@ -552,15 +536,12 @@ initGame();
 const threshold = Math.floor(countToWin / 2);
 
 function playTurn_AI(cell) {
+  function processGameStep_AI(indecies) {
+    let row = indecies.row;
+    let col = indecies.col;
 
-
-
-function processGameStep_AI(indecies) {
-  let row = indecies.row;
-  let col = indecies.col;
-
-  processGameStep(playField[row][col]);
-}
+    processGameStep(playField[row][col]);
+  }
 }
 //testDisp(100)
 function testDisp(ms) {
@@ -603,13 +584,12 @@ function testDisp1(ms, combos) {
   }, ms);
 }
 
-
-function stringlog(obj,msg){
-  if(msg){
-    console.log(msg,JSON.parse(JSON.stringify(obj)))
+function stringlog(obj, msg) {
+  if (msg) {
+    console.log(msg, JSON.parse(JSON.stringify(obj)));
     return;
   }
-  console.log(JSON.parse(JSON.stringify(obj)))
+  console.log(JSON.parse(JSON.stringify(obj)));
 }
 
 //welcome screen

@@ -45,7 +45,9 @@ export class Game {
 
     let lessBlueWin = process.checkForWin(cellChosenByLessBlue);
     if(lessBlueWin){
-      return new Response(this.gameData,lessBlueWin);
+      const resp = new Response(this.gameData,cellChosenByLessBlue,lessBlueWin);
+      console.log("response in game lb win",resp)
+      return resp
     }
     return new Response(this.gameData,cellChosenByLessBlue);
 
