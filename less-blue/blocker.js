@@ -33,28 +33,34 @@ export class Blocker extends ComboUtils {
   efficientBlockingPossibilities(threshold) {
 
     const { playField, playerId, allCombos } = this.gameData.get();
-    
-    let allEmerging = this.getAllEmergingCombos(playerId, threshold,"from blocker")
-   // console.log("alllEmerging",allEmerging)
-    
+    //console.log("threshold",threshold)
+    let emergingSorted = this.emergingSortedByThresholds(playerId, threshold)
+   // console.log("alllEmerging",emergingSorted)
+    let emergingsWithOne = this.emergingSortedByThresholds(playerId, 1)
     const firstComboValues = this.comboEntryIds(allCombos[0])
    // console.log(firstComboValues)
 
 
-    if (allEmerging.length === 0) {
+    if (emergingSorted.length === 0) {
       return [];
     }
-    /**
-     * @type {Array<{row:number,col:number}>}
-     */
-    let allBlocks = [];
+    
+    //priorityBlocks are the blocks for emerging oponent combos with highest threshold
+    let priorityBlocks = this.emptyCellsInMultipleCombos(emergingSorted[0]);
 
-    for (let i = 0; i < allEmerging.length; i++) {
-      let possibilities = this.singleComboBlockingPossibilities(allEmerging[i], playerId);
-      allBlocks.push(...possibilities);
+    let finalBlocks = [...priorityBlocks];
+
+    for(let i = 0; i < emergingsWithOne.length; i++){
+        console.log("emergings ",i ,emergingsWithOne[i].length)
     }
 
-    let blocks = this.mostFrequentElements(allBlocks);
+    // for (let i = 0; i < emergingSorted.length; i++) {
+    //   let possibilities = this.singleComboBlockingPossibilities(emergingSorted[i], playerId);
+    //   priorityBlocks.push(...possibilities);
+    // }[]]]]]]]]]]]]]]
+
+    let blocks = this.mostFrequentElements(priorityBlocks);
+    console.log("blocks needed",blocks.length)
     return blocks;
   }
 }

@@ -56,24 +56,7 @@ export class Builder extends ComboUtils {
     return possibilities;
   }
 
-  emergingSortedByThresholds(id, threshold) {
-    const { allCombos, comboLength, playerId } = this.gameData.get();
-    const combos = [];
-
-    for (let i = comboLength; i >= threshold; i--) {
-      const tempThreshold = i;
-      let emerging = [];
-      emerging = allCombos.filter((combo) =>
-        this.isEmergingCombo(combo, id, tempThreshold)
-      );
-
-      if (emerging.length > 0) {
-        combos.push(emerging);
-      }
-    }
-
-    return combos;
-  }
+ 
 
   emergingWithHighestThershold(threshold = this.defaultThreshold) {
     const { lessBlueId, comboLength } = this.gameData.get();

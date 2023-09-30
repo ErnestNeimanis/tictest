@@ -21,10 +21,12 @@ export class Algorithm extends ComboUtils {
    // console.log("blocks in alg",blocks)
     //console.log("=======================================================")
     if(blocks.length > 0){
+      console.log("blocking")
       return blocks[this.rand(0,blocks.length-1)]
     }
     const entries = builder.entries(1);
     //console.log("entries in alg",entries)
+     console.log("building")
     return entries[this.rand(0,entries.length-1)];
   }
   

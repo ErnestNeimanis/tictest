@@ -123,6 +123,44 @@ export class ComboUtils extends Utils {
   // };
 
 
+   emergingSortedByThresholds(id, threshold) {
+    const { allCombos, comboLength } = this.gameData.get();
+    const combos = [];
+
+    for (let i = comboLength; i >= threshold; i--) {
+      const tempThreshold = i;
+      let emerging = [];
+      emerging = allCombos.filter((combo) =>
+        this.isEmergingCombo(combo, id, tempThreshold)
+      );
+
+      if (emerging.length > 0) {
+        combos.push(emerging);
+      }
+    }
+
+    return combos;
+  }
+
+
+  emergingSortedByThresholdsRec(id, threshold) {
+    const { allCombos, comboLength } = this.gameData.get();
+    const combos = [];
+
+    for (let i = comboLength; i >= threshold; i--) {
+      const tempThreshold = i;
+      let emerging = [];
+      emerging = allCombos.filter((combo) =>
+        this.isEmergingCombo(combo, id, tempThreshold)
+      );
+
+      if (emerging.length > 0) {
+        combos.push(emerging);
+      }
+    }
+
+    return combos;
+  }
 
   checkForWinDumb() {
 

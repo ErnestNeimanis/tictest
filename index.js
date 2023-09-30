@@ -1,24 +1,3 @@
-import {
-  horizontalCombinations,
-  verticalCombinations,
-  diagonalCombinationsLeft,
-  diagonalCombinationsRight,
-  createAllCombinations,
-  rand,
-  randArray,
-  comboPossible,
-  randomEntryInCombo,
-  choseRandomCombo,
-  comboValuesFromIndexes,
-  arrayOccurances,
-  isEmergingCombo,
-  randomBlock,
-  mostFrequent,
-  mostFrequentMultiple,
-  mostFrequentMultipleRandom,
-  prioratizedBlocking,
-  prioratizeNewComboWithRandom,
-} from "./gameAI.js";
 
 import { LessBlue } from "./less-blue/less-blue.js";
 
@@ -91,7 +70,6 @@ function generateGameField() {
     ts.style.height = squareSize + "px";
     ts.style.width = squareSize + "px";
     squares.push(ts);
-
     cont.appendChild(squares[i]);
   }
 }
