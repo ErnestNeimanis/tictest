@@ -4,7 +4,7 @@ export class Blocker extends ComboUtils {
   constructor(gameData, threshold) {
     super(gameData);
     this.gameData = gameData;
-    this.defaultThreshold = Math.floor(this.gameData.getComboLength() / 2)-1;
+    this.defaultThreshold = Math.floor(this.gameData.getComboLength() / 2);
     this.threshold;
     if (!threshold) {
       this.threshold = this.defaultThreshold;
