@@ -17,11 +17,12 @@ export class Algorithm extends ComboUtils {
     const blocker =  this.blocker;
     const builder = this.builder;
     const blocks = blocker.blocks();
- 
+
    // console.log("blocks in alg",blocks)
     //console.log("=======================================================")
     if(blocks.length > 0){
       console.log("blocking")
+
       return blocks[this.rand(0,blocks.length-1)]
     }
     const entries = builder.entries(1);

@@ -27,6 +27,8 @@ export class GameData {
     this.activeCombos = [];
     this.turnId = this._initialTurn(initialData.start); //???
 
+    this.testData = {}
+
 
  
 

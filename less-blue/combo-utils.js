@@ -122,7 +122,8 @@ export class ComboUtils extends Utils {
   //   );
   // };
 
-
+//thesame combo will be emerging with different thersholds
+//thats polluting the data
    emergingSortedByThresholds(id, threshold) {
     const { allCombos, comboLength } = this.gameData.get();
     const combos = [];
@@ -142,25 +143,48 @@ export class ComboUtils extends Utils {
     return combos;
   }
 
-
-  emergingSortedByThresholdsRec(id, threshold) {
-    const { allCombos, comboLength } = this.gameData.get();
-    const combos = [];
-
-    for (let i = comboLength; i >= threshold; i--) {
-      const tempThreshold = i;
-      let emerging = [];
-      emerging = allCombos.filter((combo) =>
-        this.isEmergingCombo(combo, id, tempThreshold)
-      );
-
-      if (emerging.length > 0) {
-        combos.push(emerging);
+getNeighbourCells(cell) {
+  const {playField,fieldSize} = this.gameData.get();
+  const {row,col} = cell
+  const cells = [];
+  for(let i = -1;i <=1;i++){
+    const currentRow = row+i;
+    if(currentRow >= 0 && currentRow < fieldSize ){
+      for(let j = -1; j <=1; j++){
+        const currentCol = col+j;
+        if(currentCol >= 0 && currentCol < fieldSize){
+          if(row === currentRow && col === currentCol){
+            continue;
+          }
+          cells.push(new Cell(currentRow,currentCol))
+        }
       }
     }
-
-    return combos;
+    
   }
+  
+return cells;
+
+}
+
+cellsWithMostNeighbours(cells,id){
+  const {playField} = this.gameData.get();
+ let result = [];
+ 
+  cells.forEach((cell,i) => {
+    const neighbours = this.getNeighbourCells(cell);
+    neighbours.filter((n) => playField[n.row][n.col] === id)
+    neighbours.forEach((n) => result.push(cell))
+  })
+  if(result.length === 0){
+    return cells
+  }
+  result = this.mostFrequentElements(result)
+  console.log(result)
+  return result;
+
+}
+
 
   checkForWinDumb() {
 
