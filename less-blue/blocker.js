@@ -56,7 +56,7 @@ firstPriorityWithMostOverlaps(allEmergingSorted) {
     }
 
     const firstPriorityEmerging = allEmergingSorted[0];
-    let firstPriorityCells = this.mostFrequentElements(
+    let firstPriority = this.mostFrequentElements(
       this.emptyCellsFromMultipleCombos(firstPriorityEmerging)
     );
     for (let i = 1; i < allEmergingSorted.length; i++) {
@@ -64,29 +64,29 @@ firstPriorityWithMostOverlaps(allEmergingSorted) {
         allEmergingSorted[i]
       );
       console.log("priority iteration:",i)
-      const newPriorityCells = this.fileterOverlappingWithLowerPriority(firstPriorityCells, secondPriority);
-      firstPriorityCells = newPriorityCells;
+      const newPriorityCells = this.fileterOverlappingWithLowerPriority(firstPriority, secondPriority);
+      firstPriority = newPriorityCells;
     }
-    console.log("firstPriority after filtering",this.sort(firstPriorityCells))
-    const frequent = this.mostFrequentElements(firstPriorityCells);
+    console.log("firstPriority after filtering",this.sort(firstPriority))
+    const frequent = this.mostFrequentElements(firstPriority);
     const result = this.distinct(frequent);
     console.log("result",result)
     return result;
   }
 
-  fileterOverlappingWithLowerPriority(firstPriorityCells, secondPriority) {
+  fileterOverlappingWithLowerPriority(firstPriority, secondPriority) {
     console.log("===fileterOverlappingWithLowerPriorityEntries start======")
-    const combined = [...firstPriorityCells, ...secondPriority];
+    const combined = [...firstPriority, ...secondPriority];
     const mostFrequent = this.mostFrequentElements(combined);
-    const newPriorityCells = firstPriorityCells.filter((block) =>
+    const newPriorityCells = firstPriority.filter((block) =>
       mostFrequent.includes(block)
     );
-    firstPriorityCells = [...firstPriorityCells,...newPriorityCells]
+    firstPriority = [...firstPriority,...newPriorityCells]
     console.log("overlaps found",newPriorityCells.length)
-   // console.log("modified firstpriority",this.sort(firstPriorityCells))
+   // console.log("modified firstpriority",this.sort(firstPriority))
    
     console.log("===fileterOverlappingWithLowerPriorityEntries end======")
-    return firstPriorityCells;
+    return firstPriority;
   }
 
   mostNeighbours(blocks) {

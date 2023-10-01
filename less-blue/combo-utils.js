@@ -14,45 +14,36 @@ export class ComboUtils extends Utils {
 
   //{row,coll}[][]
   getAllEmergingCombos(entryId, threshold) {
-
-
-    const { allCombos,instanceId } = this.gameData.get();
- 
+    const { allCombos, instanceId } = this.gameData.get();
 
     this.logPlayField("in combo utils");
 
-    const allEmerging  = allCombos.filter((combo) => {
-    const isEmerging = this.isEmergingCombo(combo, entryId, threshold)
-    if(isEmerging){
- 
-    }
-    
- 
-    //  "result:",isEmerging,"-----")
-      return this.isEmergingCombo(combo, entryId, threshold)
-    }
-      
-    );
-    
- 
-   return allEmerging
-  };
+    const allEmerging = allCombos.filter((combo) => {
+      const isEmerging = this.isEmergingCombo(combo, entryId, threshold);
+      if (isEmerging) {
+      }
+
+      //  "result:",isEmerging,"-----")
+      return this.isEmergingCombo(combo, entryId, threshold);
+    });
+
+    return allEmerging;
+  }
 
   //bool
   isEmergingCombo(combo, entryId, threshold) {
-    const { playField,allCombos,playerId } = this.gameData.get();
- 
-    const possible =  this.comboPossible(combo, entryId)
-    const arrayOccurrences = this.arrayOccurrences(this.comboEntryIds(combo), entryId)
-    if(possible){
- 
+    const { playField, allCombos, playerId } = this.gameData.get();
+
+    const possible = this.comboPossible(combo, entryId);
+    const arrayOccurrences = this.arrayOccurrences(
+      this.comboEntryIds(combo),
+      entryId
+    );
+    if (possible) {
     }
- 
- 
-    if(arrayOccurrences > 0){
- 
+
+    if (arrayOccurrences > 0) {
     }
-   
 
     return (
       this.comboPossible(combo, entryId) &&
@@ -64,12 +55,11 @@ export class ComboUtils extends Utils {
   comboPossible(combo, entryId) {
     let combinationLength = combo.length;
     const { playField, emptyCellValue } = this.gameData.get();
-   
+
     for (let i = 0; i < combinationLength; i++) {
       let row = combo[i].row;
       let col = combo[i].col;
       let cellValue = playField[row][col];
-      
 
       if (cellValue != emptyCellValue && cellValue != entryId) {
         return false;
@@ -78,40 +68,31 @@ export class ComboUtils extends Utils {
     return true;
   }
   emptyCellsInCombo(combo) {
-    const { playField,emptyCellValue } = this.gameData.get();
+    const { playField, emptyCellValue } = this.gameData.get();
     return combo.filter(
       (cell) => playField[cell.row][cell.col] === emptyCellValue
     );
   }
 
-
   emptyCellsFromMultipleCombos(combos) {
     const cells = [];
-    if(combos.length ===0) return []
-    combos.forEach(combo => cells.push(...this.emptyCellsInCombo(combo)));
+    if (combos.length === 0) return [];
+    combos.forEach((combo) => cells.push(...this.emptyCellsInCombo(combo)));
     return cells;
   }
 
   comboEntryIds(combo) {
- 
- 
- 
-    const {playField} = this.gameData.get();
+    const { playField } = this.gameData.get();
 
- 
-
-    let values = combo.map((cell,i) => {
- 
- 
-     const row = cell.row;
-     const col = cell.col;
-     if(row === undefined || col === undefined){
- 
-      throw new Error("ONE OF THESE IS UNDEFINED")
-     }
-      return playField[row][col]
+    let values = combo.map((cell, i) => {
+      const row = cell.row;
+      const col = cell.col;
+      if (row === undefined || col === undefined) {
+        throw new Error("ONE OF THESE IS UNDEFINED");
+      }
+      return playField[row][col];
     });
- 
+
     return values;
   }
 
@@ -122,13 +103,13 @@ export class ComboUtils extends Utils {
   //   );
   // };
 
-//thesame combo will be emerging with different thersholds
-//thats polluting the data
-   emergingSortedByThresholds(id, threshold) {
+  //thesame combo will be emerging with different thersholds
+  //thats polluting the data
+  emergingSortedByThresholds(id, threshold) {
     const { allCombos, comboLength } = this.gameData.get();
     const combos = [];
 
-    for (let i = comboLength-1; i >= threshold; i--) {
+    for (let i = comboLength - 1; i >= threshold; i--) {
       const tempThreshold = i;
       let emerging = [];
       emerging = allCombos.filter((combo) =>
@@ -143,87 +124,123 @@ export class ComboUtils extends Utils {
     return combos;
   }
 
-getNeighbourCells(cell) {
-  const {playField,fieldSize} = this.gameData.get();
-  const {row,col} = cell
-  const cells = [];
-  for(let i = -1;i <=1;i++){
-    const currentRow = row+i;
-    if(currentRow >= 0 && currentRow < fieldSize ){
-      for(let j = -1; j <=1; j++){
-        const currentCol = col+j;
-        if(currentCol >= 0 && currentCol < fieldSize){
-          if(row === currentRow && col === currentCol){
-            continue;
+  getNeighbourCells(cell) {
+    const { playField, fieldSize } = this.gameData.get();
+    const { row, col } = cell;
+    const cells = [];
+    for (let i = -1; i <= 1; i++) {
+      const currentRow = row + i;
+      if (currentRow >= 0 && currentRow < fieldSize) {
+        for (let j = -1; j <= 1; j++) {
+          const currentCol = col + j;
+          if (currentCol >= 0 && currentCol < fieldSize) {
+            if (row === currentRow && col === currentCol) {
+              continue;
+            }
+            cells.push(new Cell(currentRow, currentCol));
           }
-          cells.push(new Cell(currentRow,currentCol))
         }
       }
     }
-    
+
+    return cells;
   }
-  
-return cells;
 
-}
+  comobsWithCriticalThreshold(id) {
+    const { comboLength, allCombos } = this.gameData.get();
+    const combos = allCombos.filter((combo) =>
+      this.isEmergingCombo(combo, id, comboLength-1)
+    );
+    return combos;
+  }
 
-randomCell() {
-  const {fieldSize} = this.gameData.get();
-   let randomCell = new Cell(
-        this.rand(fieldSize - 1),
-        this.rand(fieldSize - 1)
+  firstPriorityWithMostOverlaps(allEmergingSorted) {
+    if (allEmergingSorted.length === 0) {
+      return [];
+    }
+
+    const firstPriorityEmerging = allEmergingSorted[0];
+    let firstPriority = this.mostFrequentElements(
+      this.emptyCellsFromMultipleCombos(firstPriorityEmerging)
+    );
+    for (let i = 1; i < allEmergingSorted.length; i++) {
+      const secondPriority = this.emptyCellsFromMultipleCombos(
+        allEmergingSorted[i]
       );
-      return randomCell;
-}
-
-cellsWithMostNeighbours(cells,id){
- 
-  const {playField} = this.gameData.get();
- let result = [];
- 
-  cells.forEach((cell,i) => {
-    let neighbours = this.getNeighbourCells(cell);
-
-    neighbours = neighbours.filter((n) => {
-     return playField[n.row][n.col] === id
-    })
-   
-    neighbours.forEach((n) => result.push(cell))
-  })
-  if(result.length === 0){
-   
- 
-    return cells
+      console.log("priority iteration:", i);
+      const newPriorityCells = this.fileterOverlappingWithLowerPriority(
+        firstPriority,
+        secondPriority
+      );
+      firstPriority = newPriorityCells;
+    }
+    console.log("firstPriority after filtering", this.sort(firstPriority));
+    const frequent = this.mostFrequentElements(firstPriority);
+    const result = this.distinct(frequent);
+    console.log("result", result);
+    return result;
   }
-  result = this.distinct( this.mostFrequentElements(result))
- 
- 
-  return result;
 
-}
+  fileterOverlappingWithLowerPriority(firstPriority, secondPriority) {
+    console.log("===fileterOverlappingWithLowerPriorityEntries start======");
+    const combined = [...firstPriority, ...secondPriority];
+    const mostFrequent = this.mostFrequentElements(combined);
+    const newPriorityCells = firstPriority.filter((block) =>
+      mostFrequent.includes(block)
+    );
+    firstPriority = [...firstPriority, ...newPriorityCells];
+    console.log("overlaps found", newPriorityCells.length);
+    // console.log("modified firstpriority",this.sort(firstPriority))
 
+    console.log("===fileterOverlappingWithLowerPriorityEntries end======");
+    return firstPriority;
+  }
+
+  randomCell() {
+    const { fieldSize } = this.gameData.get();
+    let randomCell = new Cell(
+      this.rand(fieldSize - 1),
+      this.rand(fieldSize - 1)
+    );
+    return randomCell;
+  }
+
+  cellsWithMostNeighbours(cells, id) {
+    const { playField } = this.gameData.get();
+    let result = [];
+
+    cells.forEach((cell, i) => {
+      let neighbours = this.getNeighbourCells(cell);
+
+      neighbours = neighbours.filter((n) => {
+        return playField[n.row][n.col] === id;
+      });
+
+      neighbours.forEach((n) => result.push(cell));
+    });
+    if (result.length === 0) {
+      return cells;
+    }
+    result = this.distinct(this.mostFrequentElements(result));
+
+    return result;
+  }
 
   checkForWinDumb() {
-
     // const { allCombos, playField, emptyCellValue } = this.gameData.get();
-    const { allCombos, emptyCellValue,playField } = this.gameData.get();
- 
+    const { allCombos, emptyCellValue, playField } = this.gameData.get();
+
     let result = {};
- 
+
     for (let i = 0; i < allCombos.length; i++) {
- 
       const comboValues = this.comboEntryIds(allCombos[i]);
- 
-      const allEqual = comboValues.every(
-        (val) => { 
-        return val != emptyCellValue && val === comboValues[0]
-        }
-      );
+
+      const allEqual = comboValues.every((val) => {
+        return val != emptyCellValue && val === comboValues[0];
+      });
 
       if (allEqual) {
-        
- 
-        return new Winner(allCombos[i],comboValues[0]);
+        return new Winner(allCombos[i], comboValues[0]);
       }
     }
     return null;
@@ -231,7 +248,6 @@ cellsWithMostNeighbours(cells,id){
 
   checkForWinSmart(cell, playField = this.gameData.getPlayField()) {
     if (!playField) throw new Error("no playfield");
- 
 
     let inRowEntryCount = 1;
     const { row, col } = cell;
@@ -239,8 +255,6 @@ cellsWithMostNeighbours(cells,id){
     let winningCombo = [];
     const countToWin = this.gameData.getComboLength();
     const { emptyCellValue } = this.gameData.get();
- 
-
 
     let result = {
       combo: winningCombo,
@@ -260,9 +274,7 @@ cellsWithMostNeighbours(cells,id){
         inRowEntryCount++;
         j++;
         if (inRowEntryCount == countToWin) {
- 
-          return new Winner(winningCombo,winnerId)
-      
+          return new Winner(winningCombo, winnerId);
         }
       } else {
         break;
@@ -277,15 +289,13 @@ cellsWithMostNeighbours(cells,id){
         inRowEntryCount++;
         j--;
         if (inRowEntryCount == countToWin) {
- 
-           return new Winner(winningCombo,winnerId)
+          return new Winner(winningCombo, winnerId);
         }
       } else {
         break;
       }
     }
     if (winnerId === 2) {
- 
     }
 
     //if the correct amount of matching entries not horizontally,
@@ -305,7 +315,7 @@ cellsWithMostNeighbours(cells,id){
         i--;
 
         if (inRowEntryCount == countToWin) {
-           return new Winner(winningCombo,winnerId)
+          return new Winner(winningCombo, winnerId);
         }
       } else {
         break;
@@ -320,14 +330,12 @@ cellsWithMostNeighbours(cells,id){
         inRowEntryCount++;
         i++;
         if (inRowEntryCount == countToWin) {
-          return new Winner(winningCombo,winnerId)
+          return new Winner(winningCombo, winnerId);
         }
       } else {
         break;
       }
     }
-
-   
 
     inRowEntryCount = 1;
     winningCombo = [];
@@ -347,7 +355,7 @@ cellsWithMostNeighbours(cells,id){
         j++;
 
         if (inRowEntryCount == countToWin) {
-            return new Winner(winningCombo,winnerId)
+          return new Winner(winningCombo, winnerId);
         }
       } else {
         break;
@@ -365,7 +373,7 @@ cellsWithMostNeighbours(cells,id){
         i++;
         j--;
         if (inRowEntryCount == countToWin) {
-            return new Winner(winningCombo,winnerId)
+          return new Winner(winningCombo, winnerId);
         }
       } else {
         break;
@@ -373,7 +381,6 @@ cellsWithMostNeighbours(cells,id){
     }
 
     if (winnerId === 2) {
- 
     }
 
     //diagonally other direction
@@ -392,7 +399,7 @@ cellsWithMostNeighbours(cells,id){
         j--;
 
         if (inRowEntryCount == countToWin) {
-           return new Winner(winningCombo,winnerId)
+          return new Winner(winningCombo, winnerId);
         }
       } else {
         break;
@@ -410,7 +417,7 @@ cellsWithMostNeighbours(cells,id){
         i++;
         j++;
         if (inRowEntryCount == countToWin) {
-           return new Winner(winningCombo,winnerId)
+          return new Winner(winningCombo, winnerId);
         }
       } else {
         break;
@@ -418,21 +425,15 @@ cellsWithMostNeighbours(cells,id){
     }
 
     if (winnerId === 2) {
- 
     }
- 
+
     return null;
   }
 
-
-logPlayField(msg){
-    if(msg){
- 
+  logPlayField(msg) {
+    if (msg) {
     }
-    const {playField} = this.gameData.get();
-     playField.forEach(row => row.forEach( (cell) => { 
- 
-    }))
+    const { playField } = this.gameData.get();
+    playField.forEach((row) => row.forEach((cell) => {}));
   }
-
 }

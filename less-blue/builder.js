@@ -46,8 +46,10 @@ export class Builder extends ComboUtils {
       return [randomCell];
     }
 
-
-
+    const possibilitiesWithMostOverlaps = this.firstPriorityWithMostOverlaps(emergingSorted)
+    const possibilitiesWithMostNeighbours =this.cellsWithMostNeighbours(possibilitiesWithMostOverlaps,lessBlueId);
+    const result =  possibilitiesWithMostNeighbours;
+    return result;
 
     let allEntries = this.emptyCellsFromMultipleCombos(emergingSorted[0]);
     const emergingWithHighestThreshold = emergingSorted[0];

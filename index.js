@@ -9,8 +9,8 @@ const restartBtn = document.querySelector("#restartBtn");
 const playerTurnText = document.querySelector("#playerTurnText");
 
 //input field size and combi lenth
-let size = 15;
-let countToWin = 5;
+let size = 3;
+let countToWin =3;
 //
 
 //two platyers or against computer
