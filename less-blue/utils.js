@@ -107,7 +107,13 @@ export class Utils {
 
   //distinct aint workin
   distinct(array){
+
+    const strArr = this.stringifyArrayElements(array);
+    const strArrSet = new Set(strArr);
+    const backToArr = Array.from(strArrSet)
+    const result = backToArr.map(el => JSON.parse(el))
+
     
-    return Array.from(new Set(array))
+    return result
   }
 }
