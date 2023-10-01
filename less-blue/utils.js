@@ -107,13 +107,15 @@ export class Utils {
 
   //distinct aint workin
   distinct(array){
-
     const strArr = this.stringifyArrayElements(array);
     const strArrSet = new Set(strArr);
     const backToArr = Array.from(strArrSet)
-    const result = backToArr.map(el => JSON.parse(el))
-
-    
-    return result
+    try {
+       const result = backToArr.map(el => JSON.parse(el))
+        return result
+    } catch (error) {
+      console.log(error)
+      return array;
+    }
   }
 }

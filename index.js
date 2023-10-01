@@ -129,7 +129,52 @@ function resize() {
 }
 
 let pause = false;
+window.lb = function(row,col){
+  //const {row,col} = cell
+  const element = playField[row][col]
+    if (gameOver) {
+    return;
+  }
+  if (element.hasChildNodes()) {
+    return;
+  }
+inputPlayfieldValue(element);
+  addSymbolToParent(element);
 
+
+
+  swapPlayers();
+
+  const response = lessBlue.nextMove(row, col);
+
+
+  console.log("response", response);
+
+  if (response.cell) {
+    const newElement = playField[response.row][response.col];
+    inputPlayfieldValue(newElement);
+    addSymbolToParent(newElement);
+    swapPlayers();
+  }
+
+  if (response.winner) {
+    const { combo, id } = response.winner;
+    insertWinningColors(combo);
+    gameOver = true;
+    return;
+  }
+
+}
+function self(){
+  const lb2 = new LessBlue(size,countToWin);
+  const startRow = 0;
+  const startCol = 0;
+  while(!gameOver){
+    
+  }
+}
+
+const testMode = false
 function processGameStepWithLessBlue(element) {
   if(pause){
     return;
@@ -145,6 +190,11 @@ function processGameStepWithLessBlue(element) {
 
   inputPlayfieldValue(element);
   addSymbolToParent(element);
+
+if(testMode){
+  return
+}
+
   swapPlayers();
 
   const response = lessBlue.nextMove(row, col);
@@ -209,6 +259,9 @@ function processGameStep(element) {
 function addSymbolToParent(parent) {
   let symbol = document.createElement("span");
   symbol.classList.add("symbol");
+  
+
+
   symbol.innerHTML = playerSymbol;
 
   symbol.style.color = playerColor;

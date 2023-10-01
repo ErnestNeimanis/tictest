@@ -4,7 +4,7 @@ export class Blocker extends ComboUtils {
   constructor(gameData, threshold) {
     super(gameData);
     this.gameData = gameData;
-    this.defaultThreshold = Math.floor(this.gameData.getComboLength() / 2);
+    this.defaultThreshold = Math.floor(this.gameData.getComboLength() / 2)-1;
     this.threshold;
     if (!threshold) {
       this.threshold = this.defaultThreshold;
@@ -115,6 +115,7 @@ export class Blocker extends ComboUtils {
       const secondPriorityBlocks = this.emptyCellsFromMultipleCombos(
         allEmergingSorted[i]
       );
+      console.log("priority iteration:",i)
       const newPriorityBlocks = this.ovr(firstPriorityBlocks, secondPriorityBlocks);
       firstPriorityBlocks = newPriorityBlocks;
     }
@@ -134,7 +135,7 @@ export class Blocker extends ComboUtils {
     );
     firstPriorityBlocks = [...firstPriorityBlocks,...newPriorityBlocks]
     console.log("overlaps found",newPriorityBlocks.length)
-    console.log("modified firstpriority",this.sort(firstPriorityBlocks))
+   // console.log("modified firstpriority",this.sort(firstPriorityBlocks))
    
     console.log("===ovr end======")
     return firstPriorityBlocks;
