@@ -168,19 +168,34 @@ return cells;
 }
 
 cellsWithMostNeighbours(cells,id){
+  console.log("-----------cellsWithMostNeighbours start-----------")
   const {playField} = this.gameData.get();
  let result = [];
  
   cells.forEach((cell,i) => {
-    const neighbours = this.getNeighbourCells(cell);
-    neighbours.filter((n) => playField[n.row][n.col] === id)
+    let neighbours = this.getNeighbourCells(cell);
+
+
+    console.log("neighbour cells",cell,": ",
+    this.comboEntryIds(neighbours))
+  
+  
+    neighbours = neighbours.filter((n) => {
+      console.log("id:",id)
+      console.log("in filter",playField[n.row][n.col])
+     return playField[n.row][n.col] === id
+    })
+     console.log("neighbours after filter",neighbours)
     neighbours.forEach((n) => result.push(cell))
   })
   if(result.length === 0){
+   
+     console.log("-----------cellsWithMostNeighbours end in no results-----------")
     return cells
   }
-  result = this.mostFrequentElements(result)
-  console.log(result)
+  result = this.distinct( this.mostFrequentElements(result))
+  console.log("cells with most neighbours",result)
+  console.log("-----------cellsWithMostNeighbours end-----------")
   return result;
 
 }
