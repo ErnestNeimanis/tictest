@@ -32,104 +32,73 @@ export class Blocker extends ComboUtils {
 
   efficientBlockingPossibilities(threshold) {
     const { playField, playerId, allCombos } = this.gameData.get();
-    //console.log("threshold",threshold)
-    let emergingSorted = this.emergingSortedByThresholds(playerId, threshold);
-    // console.log("alllEmerging",emergingSorted)
-    const emergingsWithOne = this.emergingSortedByThresholds(playerId, 1);
-    const firstComboValues = this.comboEntryIds(allCombos[0]);
-    // console.log(firstComboValues)
+    const emergingSorted = this.emergingSortedByThresholds(playerId, 1);
 
-    if (emergingSorted.length === 0) {
+    if (emergingSorted.length < threshold) {
       return [];
     }
-    const emergingWithHighestThreshold = emergingSorted[0];
-    //console.log("emergin sorted",emergi)
-    //priorityBlocks are the blocks for emerging oponent combos with highest threshold
-    let priorityBlocks = this.emptyCellsFromMultipleCombos(
-      emergingWithHighestThreshold
+    const blocksWithMostOverlaps = this.firstPriorityWithMostOverlaps(
+      emergingSorted
     );
-
-    //
-
-    let finalBlocks = [...priorityBlocks];
-    //console.log("emergings with one", emergingsWithOne);
-   // console.log("*********overlap start********");
-    // const overlapping = this.overlappingBlockingPossibilities(emergingsWithOne);
-    const res =this.firstPriorityBlocksWithMostOverlaps(emergingsWithOne)
-   // console.log(res);
-   // console.log("*********overlap end********");
-
-    for (let i = 0; i < emergingsWithOne.length; i++) {
-     // console.log("emergings ", i, emergingsWithOne[i].length);
-    }
-
-    let blocks = this.mostFrequentElements(priorityBlocks);
-    //console.log("blocks needed", blocks.length);
-    
-    //return res;
-    console.log("blocks before neighbours searched",res)
-    return this.cellsWithMostNeighbours(res,playerId);
+    const blocksWithMostNeighbours = this.cellsWithMostNeighbours(
+      blocksWithMostOverlaps,
+      playerId
+    );
+    const result = blocksWithMostNeighbours;
+    return result;
   }
   //Cell[][][]
 
-
-  firstPriorityBlocksWithMostOverlaps(allEmergingSorted) {
-   const { playerId} = this.gameData.get()
+firstPriorityWithMostOverlaps(allEmergingSorted) {
+   
     if(allEmergingSorted.length === 0) {
       return []
     }
-console.log("allemergingSorted",allEmergingSorted)
+
     const firstPriorityEmerging = allEmergingSorted[0];
-    let firstPriorityBlocks = this.mostFrequentElements(
+    let firstPriorityCells = this.mostFrequentElements(
       this.emptyCellsFromMultipleCombos(firstPriorityEmerging)
     );
-  
     for (let i = 1; i < allEmergingSorted.length; i++) {
-      const secondPriorityBlocks = this.emptyCellsFromMultipleCombos(
+      const secondPriority = this.emptyCellsFromMultipleCombos(
         allEmergingSorted[i]
       );
       console.log("priority iteration:",i)
-      const newPriorityBlocks = this.fileterOverlappingWithLowerPriorityBlocks(firstPriorityBlocks, secondPriorityBlocks);
-      firstPriorityBlocks = newPriorityBlocks;
-  
+      const newPriorityCells = this.fileterOverlappingWithLowerPriority(firstPriorityCells, secondPriority);
+      firstPriorityCells = newPriorityCells;
     }
-    console.log("firstPriority after filtering",this.sort(firstPriorityBlocks))
-    const frequent = this.mostFrequentElements(firstPriorityBlocks);
+    console.log("firstPriority after filtering",this.sort(firstPriorityCells))
+    const frequent = this.mostFrequentElements(firstPriorityCells);
     const result = this.distinct(frequent);
     console.log("result",result)
     return result;
   }
 
-  fileterOverlappingWithLowerPriorityBlocks(firstPriorityBlocks, secondPriorityBlocks) {
-  //  console.log("===fileterOverlappingWithLowerPriorityBlocks start======")
-    const combined = [...firstPriorityBlocks, ...secondPriorityBlocks];
+  fileterOverlappingWithLowerPriority(firstPriorityCells, secondPriority) {
+    console.log("===fileterOverlappingWithLowerPriorityEntries start======")
+    const combined = [...firstPriorityCells, ...secondPriority];
     const mostFrequent = this.mostFrequentElements(combined);
-    const newPriorityBlocks = firstPriorityBlocks.filter((block) =>
+    const newPriorityCells = firstPriorityCells.filter((block) =>
       mostFrequent.includes(block)
     );
-    firstPriorityBlocks = [...firstPriorityBlocks,...newPriorityBlocks]
-   // console.log("overlaps found",newPriorityBlocks.length)
-   // console.log("modified firstpriority",this.sort(firstPriorityBlocks))
+    firstPriorityCells = [...firstPriorityCells,...newPriorityCells]
+    console.log("overlaps found",newPriorityCells.length)
+   // console.log("modified firstpriority",this.sort(firstPriorityCells))
    
-    //console.log("===fileterOverlappingWithLowerPriorityBlocks end======")
-    return firstPriorityBlocks;
+    console.log("===fileterOverlappingWithLowerPriorityEntries end======")
+    return firstPriorityCells;
   }
 
-  mostNeighbours(blocks){
-    const {playerId} = this.gameData.get();
-    const closest = blocks.filter((block)=>{
-        let neighbourCount = 0;
+  mostNeighbours(blocks) {
+    const { playerId } = this.gameData.get();
+    const closest = blocks.filter((block) => {
+      let neighbourCount = 0;
 
-        const {row,col} = block;
-
-
-
-
-
-    })
+      const { row, col } = block;
+    });
   }
 
-  sort(array){
+  sort(array) {
     return array.sort((a, b) => a.row - b.row);
   }
 }

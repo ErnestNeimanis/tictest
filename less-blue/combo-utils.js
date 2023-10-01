@@ -167,35 +167,37 @@ return cells;
 
 }
 
+randomCell() {
+  const {fieldSize} = this.gameData.get();
+   let randomCell = new Cell(
+        this.rand(fieldSize - 1),
+        this.rand(fieldSize - 1)
+      );
+      return randomCell;
+}
+
 cellsWithMostNeighbours(cells,id){
-  console.log("-----------cellsWithMostNeighbours start-----------")
+ 
   const {playField} = this.gameData.get();
  let result = [];
  
   cells.forEach((cell,i) => {
     let neighbours = this.getNeighbourCells(cell);
 
-
-    console.log("neighbour cells",cell,": ",
-    this.comboEntryIds(neighbours))
-  
-  
     neighbours = neighbours.filter((n) => {
-      console.log("id:",id)
-      console.log("in filter",playField[n.row][n.col])
      return playField[n.row][n.col] === id
     })
-     console.log("neighbours after filter",neighbours)
+   
     neighbours.forEach((n) => result.push(cell))
   })
   if(result.length === 0){
    
-     console.log("-----------cellsWithMostNeighbours end in no results-----------")
+ 
     return cells
   }
   result = this.distinct( this.mostFrequentElements(result))
-  console.log("cells with most neighbours",result)
-  console.log("-----------cellsWithMostNeighbours end-----------")
+ 
+ 
   return result;
 
 }
